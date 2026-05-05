@@ -1,0 +1,78 @@
+{
+  "lastUpdated": "2026-04-24T00:00:00.000Z",
+  "source": "local-json",
+  "models": [
+    {
+      "name": "GPT-5.4",
+      "provider": "OpenAI",
+      "coding": 96.5,
+      "math": 94.2,
+      "reasoning": 96.8,
+      "chat": 94.6,
+      "bestUseCase": "agentic coding, professional workflows, and balanced reasoning-heavy work"
+    },
+    {
+      "name": "GPT-5.4 Pro",
+      "provider": "OpenAI",
+      "coding": 97.4,
+      "math": 95.6,
+      "reasoning": 98.0,
+      "chat": 94.9,
+      "bestUseCase": "maximum-performance analysis, advanced coding, and long-horizon agent tasks"
+    },
+    {
+      "name": "Gemini 3.1 Pro",
+      "provider": "Google",
+      "coding": 93.8,
+      "math": 96.1,
+      "reasoning": 97.2,
+      "chat": 93.7,
+      "bestUseCase": "complex reasoning, multimodal research, and synthesis-heavy analysis"
+    },
+    {
+      "name": "Claude Opus 4.7",
+      "provider": "Anthropic",
+      "coding": 97.0,
+      "math": 94.7,
+      "reasoning": 97.6,
+      "chat": 96.2,
+      "bestUseCase": "large codebase work, careful analysis, and polished professional writing"
+    },
+    {
+      "name": "Claude Opus 4.6",
+      "provider": "Anthropic",
+      "coding": 95.9,
+      "math": 94.0,
+      "reasoning": 96.4,
+      "chat": 95.5,
+      "bestUseCase": "reliable coding, code review, debugging, and long-context task execution"
+    },
+    {
+      "name": "Llama 4 Maverick",
+      "provider": "Meta",
+      "coding": 88.5,
+      "math": 86.9,
+      "reasoning": 90.2,
+      "chat": 91.4,
+      "bestUseCase": "open-weight deployment, multimodal apps, and cost-controlled assistants"
+    },
+    {
+      "name": "Qwen3 Max",
+      "provider": "Alibaba",
+      "coding": 92.8,
+      "math": 94.8,
+      "reasoning": 93.5,
+      "chat": 91.8,
+      "bestUseCase": "math-heavy work, multilingual systems, and open ecosystem integration"
+    },
+    {
+      "name": "DeepSeek-V3.2 Reasoner",
+      "provider": "DeepSeek",
+      "coding": 93.6,
+      "math": 95.4,
+      "reasoning": 96.0,
+      "chat": 90.5,
+      "bestUseCase": "reasoning-first agent workflows, math, and cost-sensitive API usage"
+    }
+  ]
+}

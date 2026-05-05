@@ -1,0 +1,482 @@
+[
+  {
+    "id": 1,
+    "task": "coding",
+    "difficulty": "easy",
+    "question": "Write a Python function to reverse a string.",
+    "expected_answer": "def reverse(s): return s[::-1]",
+    "keywords": ["reverse", "s[::-1]", "return", "def"]
+  },
+  {
+    "id": 2,
+    "task": "coding",
+    "difficulty": "easy",
+    "question": "Write a Python function to check if a number is even.",
+    "expected_answer": "def is_even(n): return n % 2 == 0",
+    "keywords": ["even", "% 2", "return", "def", "0"]
+  },
+  {
+    "id": 3,
+    "task": "coding",
+    "difficulty": "easy",
+    "question": "Write a Python one-liner to square each element in a list called nums.",
+    "expected_answer": "[x**2 for x in nums]",
+    "keywords": ["**2", "for x in", "nums", "list comprehension"]
+  },
+  {
+    "id": 4,
+    "task": "coding",
+    "difficulty": "medium",
+    "question": "Write a Python function to find the factorial of a number using recursion.",
+    "expected_answer": "def factorial(n): return 1 if n <= 1 else n * factorial(n-1)",
+    "keywords": ["factorial", "recursion", "n-1", "def", "return 1"]
+  },
+  {
+    "id": 5,
+    "task": "coding",
+    "difficulty": "medium",
+    "question": "Write a Python function to check if a string is a palindrome.",
+    "expected_answer": "def is_palindrome(s): return s == s[::-1]",
+    "keywords": ["palindrome", "[::-1]", "reverse", "def", "return"]
+  },
+  {
+    "id": 6,
+    "task": "coding",
+    "difficulty": "medium",
+    "question": "Write a Python function to find the maximum element in a list without using the built-in max().",
+    "expected_answer": "def find_max(lst): m = lst[0]; [m := x for x in lst if x > m]; return m",
+    "keywords": ["max", "for x in", "if x >", "return", "def"]
+  },
+  {
+    "id": 7,
+    "task": "coding",
+    "difficulty": "medium",
+    "question": "Write a Python function to count the frequency of each character in a string.",
+    "expected_answer": "def char_freq(s): freq = {}; [freq.update({c: freq.get(c, 0)+1}) for c in s]; return freq",
+    "keywords": ["frequency", "dict", "for c in", "count", "def"]
+  },
+  {
+    "id": 8,
+    "task": "coding",
+    "difficulty": "hard",
+    "question": "Write a Python function to implement binary search on a sorted list.",
+    "expected_answer": "def binary_search(arr, target): lo, hi = 0, len(arr)-1; while lo<=hi: mid=(lo+hi)//2; if arr[mid]==target: return mid; elif arr[mid]<target: lo=mid+1; else: hi=mid-1; return -1",
+    "keywords": ["binary search", "lo", "hi", "mid", "//2", "while"]
+  },
+  {
+    "id": 9,
+    "task": "coding",
+    "difficulty": "hard",
+    "question": "Write a Python function to flatten a nested list.",
+    "expected_answer": "def flatten(lst): return [x for sub in lst for x in (flatten(sub) if isinstance(sub, list) else [sub])]",
+    "keywords": ["flatten", "nested", "isinstance", "recursive", "list"]
+  },
+  {
+    "id": 10,
+    "task": "coding",
+    "difficulty": "hard",
+    "question": "Write a Python function to find all prime numbers up to n using the Sieve of Eratosthenes.",
+    "expected_answer": "def sieve(n): primes=[True]*(n+1); primes[0]=primes[1]=False; [primes.__setitem__(j,False) for i in range(2,int(n**0.5)+1) if primes[i] for j in range(i*i,n+1,i)]; return [i for i,v in enumerate(primes) if v]",
+    "keywords": ["sieve", "prime", "Eratosthenes", "not composite", "primes"]
+  },
+  {
+    "id": 11,
+    "task": "coding",
+    "difficulty": "medium",
+    "question": "Write a Python function to merge two sorted lists into one sorted list.",
+    "expected_answer": "def merge_sorted(a, b): return sorted(a + b)",
+    "keywords": ["merge", "sorted", "def", "two lists"]
+  },
+  {
+    "id": 12,
+    "task": "coding",
+    "difficulty": "easy",
+    "question": "Write a Python function to sum all numbers in a list.",
+    "expected_answer": "def list_sum(lst): return sum(lst)",
+    "keywords": ["sum", "list", "def", "return"]
+  },
+  {
+    "id": 13,
+    "task": "coding",
+    "difficulty": "medium",
+    "question": "Write a Python function that returns a dictionary mapping each word in a sentence to its length.",
+    "expected_answer": "def word_lengths(s): return {w: len(w) for w in s.split()}",
+    "keywords": ["dict", "len", "split", "comprehension", "word"]
+  },
+  {
+    "id": 14,
+    "task": "coding",
+    "difficulty": "hard",
+    "question": "Write a Python generator function that yields Fibonacci numbers infinitely.",
+    "expected_answer": "def fib(): a, b = 0, 1; while True: yield a; a, b = b, a+b",
+    "keywords": ["generator", "yield", "fibonacci", "while True", "a, b"]
+  },
+  {
+    "id": 15,
+    "task": "coding",
+    "difficulty": "medium",
+    "question": "Write a Python function to remove duplicates from a list while preserving order.",
+    "expected_answer": "def remove_dupes(lst): seen=set(); return [x for x in lst if not (x in seen or seen.add(x))]",
+    "keywords": ["duplicate", "set", "seen", "preserve", "order"]
+  },
+  {
+    "id": 16,
+    "task": "math",
+    "difficulty": "easy",
+    "question": "If x + 2 = 5, find x.",
+    "expected_answer": "3",
+    "keywords": ["3", "x = 3"]
+  },
+  {
+    "id": 17,
+    "task": "math",
+    "difficulty": "easy",
+    "question": "What is 15% of 200?",
+    "expected_answer": "30",
+    "keywords": ["30"]
+  },
+  {
+    "id": 18,
+    "task": "math",
+    "difficulty": "easy",
+    "question": "What is the area of a rectangle with length 8 and width 5?",
+    "expected_answer": "40",
+    "keywords": ["40", "area", "8 x 5", "8*5"]
+  },
+  {
+    "id": 19,
+    "task": "math",
+    "difficulty": "easy",
+    "question": "Simplify: 3/6.",
+    "expected_answer": "1/2",
+    "keywords": ["1/2", "0.5", "half"]
+  },
+  {
+    "id": 20,
+    "task": "math",
+    "difficulty": "medium",
+    "question": "Solve for x: 2x - 4 = 10.",
+    "expected_answer": "7",
+    "keywords": ["7", "x = 7"]
+  },
+  {
+    "id": 21,
+    "task": "math",
+    "difficulty": "medium",
+    "question": "A train travels 300 km in 5 hours. What is its average speed in km/h?",
+    "expected_answer": "60",
+    "keywords": ["60", "km/h", "60 km/h"]
+  },
+  {
+    "id": 22,
+    "task": "math",
+    "difficulty": "medium",
+    "question": "What is the compound interest on $1000 at 10% per annum for 2 years?",
+    "expected_answer": "210",
+    "keywords": ["210", "$210", "1210"]
+  },
+  {
+    "id": 23,
+    "task": "math",
+    "difficulty": "medium",
+    "question": "If a circle has radius 7, what is its circumference? Use π ≈ 3.14.",
+    "expected_answer": "43.96",
+    "keywords": ["43.96", "43.98", "2π", "2*3.14*7"]
+  },
+  {
+    "id": 24,
+    "task": "math",
+    "difficulty": "hard",
+    "question": "Solve the quadratic: x² - 5x + 6 = 0.",
+    "expected_answer": "x = 2 or x = 3",
+    "keywords": ["2", "3", "x = 2", "x = 3", "roots"]
+  },
+  {
+    "id": 25,
+    "task": "math",
+    "difficulty": "hard",
+    "question": "What is the sum of the first 20 natural numbers?",
+    "expected_answer": "210",
+    "keywords": ["210", "n(n+1)/2", "sum"]
+  },
+  {
+    "id": 26,
+    "task": "math",
+    "difficulty": "hard",
+    "question": "A bag has 5 red and 3 blue balls. What is the probability of picking a red ball?",
+    "expected_answer": "5/8",
+    "keywords": ["5/8", "0.625", "62.5%"]
+  },
+  {
+    "id": 27,
+    "task": "math",
+    "difficulty": "easy",
+    "question": "What is 2 to the power of 8?",
+    "expected_answer": "256",
+    "keywords": ["256"]
+  },
+  {
+    "id": 28,
+    "task": "math",
+    "difficulty": "medium",
+    "question": "Find the LCM of 12 and 18.",
+    "expected_answer": "36",
+    "keywords": ["36", "LCM = 36"]
+  },
+  {
+    "id": 29,
+    "task": "math",
+    "difficulty": "hard",
+    "question": "Differentiate f(x) = 3x³ + 2x² - x + 5.",
+    "expected_answer": "9x² + 4x - 1",
+    "keywords": ["9x²", "4x", "-1", "derivative"]
+  },
+  {
+    "id": 30,
+    "task": "math",
+    "difficulty": "medium",
+    "question": "The angles of a triangle are in ratio 1:2:3. Find each angle.",
+    "expected_answer": "30, 60, 90",
+    "keywords": ["30", "60", "90", "degrees"]
+  },
+  {
+    "id": 31,
+    "task": "reasoning",
+    "difficulty": "easy",
+    "question": "What comes next in the sequence: 2, 4, 8, 16?",
+    "expected_answer": "32",
+    "keywords": ["32"]
+  },
+  {
+    "id": 32,
+    "task": "reasoning",
+    "difficulty": "easy",
+    "question": "All cats are animals. Tom is a cat. Is Tom an animal?",
+    "expected_answer": "Yes",
+    "keywords": ["Yes", "true", "animal"]
+  },
+  {
+    "id": 33,
+    "task": "reasoning",
+    "difficulty": "easy",
+    "question": "If it is raining, the ground gets wet. The ground is wet. Does this mean it is definitely raining?",
+    "expected_answer": "No, not necessarily.",
+    "keywords": ["No", "not necessarily", "could be", "other causes"]
+  },
+  {
+    "id": 34,
+    "task": "reasoning",
+    "difficulty": "medium",
+    "question": "What comes next: 1, 1, 2, 3, 5, 8, ?",
+    "expected_answer": "13",
+    "keywords": ["13", "fibonacci"]
+  },
+  {
+    "id": 35,
+    "task": "reasoning",
+    "difficulty": "medium",
+    "question": "A is taller than B. B is taller than C. Who is the shortest?",
+    "expected_answer": "C",
+    "keywords": ["C", "shortest"]
+  },
+  {
+    "id": 36,
+    "task": "reasoning",
+    "difficulty": "medium",
+    "question": "If all birds can fly, and penguins are birds, can penguins fly? Is there a flaw in this reasoning?",
+    "expected_answer": "Yes, there is a flaw. Not all birds can fly; penguins cannot fly.",
+    "keywords": ["flaw", "penguins cannot fly", "not all birds", "false premise"]
+  },
+  {
+    "id": 37,
+    "task": "reasoning",
+    "difficulty": "medium",
+    "question": "What is the odd one out: Apple, Orange, Banana, Carrot?",
+    "expected_answer": "Carrot, because it is a vegetable.",
+    "keywords": ["Carrot", "vegetable", "not a fruit", "different"]
+  },
+  {
+    "id": 38,
+    "task": "reasoning",
+    "difficulty": "hard",
+    "question": "A farmer has chickens and cows. There are 20 heads and 56 legs. How many chickens and cows are there?",
+    "expected_answer": "12 chickens and 8 cows",
+    "keywords": ["12 chickens", "8 cows", "chickens", "cows"]
+  },
+  {
+    "id": 39,
+    "task": "reasoning",
+    "difficulty": "hard",
+    "question": "Three boxes are labelled 'Apples', 'Oranges', and 'Mixed'. All labels are wrong. You pick one fruit from the 'Mixed' box and it is an apple. What does each box contain?",
+    "expected_answer": "Mixed box has Apples; Apples box has Oranges; Oranges box has Mixed.",
+    "keywords": ["Mixed has Apples", "Apples has Oranges", "Oranges has Mixed", "all labels wrong"]
+  },
+  {
+    "id": 40,
+    "task": "reasoning",
+    "difficulty": "hard",
+    "question": "In a race, if you overtake the person in second place, what position are you in?",
+    "expected_answer": "Second place.",
+    "keywords": ["second", "2nd"]
+  },
+  {
+    "id": 41,
+    "task": "reasoning",
+    "difficulty": "easy",
+    "question": "What comes next in the series: Monday, Wednesday, Friday, ?",
+    "expected_answer": "Sunday",
+    "keywords": ["Sunday"]
+  },
+  {
+    "id": 42,
+    "task": "reasoning",
+    "difficulty": "medium",
+    "question": "You have 8 balls; one is slightly heavier. Using a balance scale only twice, find the heavy ball. What is your strategy?",
+    "expected_answer": "Split into groups of 3, 3, 2. Weigh 3 vs 3. If equal, weigh the 2 remaining. If unequal, weigh 2 from the heavy group.",
+    "keywords": ["3 groups", "balance", "two weighings", "split", "heavier group"]
+  },
+  {
+    "id": 43,
+    "task": "reasoning",
+    "difficulty": "medium",
+    "question": "Find the pattern: 3, 6, 11, 18, 27, ?",
+    "expected_answer": "38",
+    "keywords": ["38"]
+  },
+  {
+    "id": 44,
+    "task": "reasoning",
+    "difficulty": "hard",
+    "question": "If the day before yesterday was Thursday, what day is tomorrow?",
+    "expected_answer": "Monday",
+    "keywords": ["Monday"]
+  },
+  {
+    "id": 45,
+    "task": "reasoning",
+    "difficulty": "easy",
+    "question": "What is heavier: a kilogram of feathers or a kilogram of iron?",
+    "expected_answer": "They weigh the same.",
+    "keywords": ["same", "equal", "both 1 kilogram"]
+  },
+  {
+    "id": 46,
+    "task": "chat",
+    "difficulty": "easy",
+    "question": "What are three tips for staying productive while working from home?",
+    "expected_answer": "Set a schedule, minimize distractions, and take regular breaks.",
+    "keywords": ["schedule", "distraction", "break", "productive", "focus"]
+  },
+  {
+    "id": 47,
+    "task": "chat",
+    "difficulty": "easy",
+    "question": "Explain what artificial intelligence is in simple terms.",
+    "expected_answer": "AI is the ability of machines to mimic human intelligence and learn from experience.",
+    "keywords": ["machine", "learn", "intelligence", "mimic", "simulate"]
+  },
+  {
+    "id": 48,
+    "task": "chat",
+    "difficulty": "easy",
+    "question": "What is the capital of France?",
+    "expected_answer": "Paris",
+    "keywords": ["Paris"]
+  },
+  {
+    "id": 49,
+    "task": "chat",
+    "difficulty": "medium",
+    "question": "What are the main differences between supervised and unsupervised learning in AI?",
+    "expected_answer": "Supervised learning uses labeled data to train models; unsupervised learning finds patterns in unlabeled data.",
+    "keywords": ["supervised", "unsupervised", "labeled", "unlabeled", "patterns"]
+  },
+  {
+    "id": 50,
+    "task": "chat",
+    "difficulty": "medium",
+    "question": "Write a polite email declining a job offer.",
+    "expected_answer": "Dear [Name], Thank you for the offer. After careful consideration, I must respectfully decline. I appreciate the opportunity.",
+    "keywords": ["thank", "decline", "respectfully", "opportunity", "polite"]
+  },
+  {
+    "id": 51,
+    "task": "chat",
+    "difficulty": "medium",
+    "question": "Summarize the plot of Romeo and Juliet in 3 sentences.",
+    "expected_answer": "Romeo and Juliet are two young lovers from feuding families in Verona. They secretly marry but tragedy follows. Both die due to a series of misunderstandings.",
+    "keywords": ["Romeo", "Juliet", "feud", "tragedy", "die", "Verona", "love"]
+  },
+  {
+    "id": 52,
+    "task": "chat",
+    "difficulty": "medium",
+    "question": "What are the pros and cons of electric vehicles?",
+    "expected_answer": "Pros: lower emissions, cheaper fuel. Cons: limited range, charging infrastructure, higher upfront cost.",
+    "keywords": ["emission", "charging", "range", "cost", "electric", "fuel"]
+  },
+  {
+    "id": 53,
+    "task": "chat",
+    "difficulty": "hard",
+    "question": "Analyze the ethical implications of using AI in hiring decisions.",
+    "expected_answer": "AI hiring tools can reduce human bias but may encode historical biases, lack transparency, and raise fairness concerns for underrepresented groups.",
+    "keywords": ["bias", "fairness", "transparency", "ethics", "hiring", "discrimination"]
+  },
+  {
+    "id": 54,
+    "task": "chat",
+    "difficulty": "hard",
+    "question": "Explain the trolley problem and two philosophical positions on it.",
+    "expected_answer": "The trolley problem: divert a runaway trolley to kill 1 or let it kill 5. Utilitarianism says divert; deontology says you must not use someone as a means.",
+    "keywords": ["trolley", "utilitarian", "deontolog", "5 people", "1 person", "moral"]
+  },
+  {
+    "id": 55,
+    "task": "chat",
+    "difficulty": "hard",
+    "question": "What are the key geopolitical consequences of climate change?",
+    "expected_answer": "Climate change can trigger resource conflicts, mass migration, food insecurity, and shifts in global power as nations compete for habitable land and water.",
+    "keywords": ["migration", "conflict", "resource", "food", "geopolitical", "climate", "water"]
+  },
+  {
+    "id": 56,
+    "task": "chat",
+    "difficulty": "easy",
+    "question": "What does HTTP stand for and what is it used for?",
+    "expected_answer": "Hypertext Transfer Protocol, used for transmitting web pages over the internet.",
+    "keywords": ["Hypertext", "Transfer", "Protocol", "web", "internet"]
+  },
+  {
+    "id": 57,
+    "task": "chat",
+    "difficulty": "medium",
+    "question": "Explain the concept of machine learning in under 100 words.",
+    "expected_answer": "Machine learning is a branch of AI that lets computers learn patterns from data without being explicitly programmed. Models are trained on datasets and improve with experience.",
+    "keywords": ["machine learning", "data", "patterns", "train", "model", "AI", "learn"]
+  },
+  {
+    "id": 58,
+    "task": "chat",
+    "difficulty": "hard",
+    "question": "Compare and contrast deep learning and traditional machine learning approaches.",
+    "expected_answer": "Traditional ML requires manual feature engineering; deep learning automatically learns features via neural networks with many layers. Deep learning excels on unstructured data but needs more data and compute.",
+    "keywords": ["feature", "neural network", "layers", "unstructured", "compute", "deep learning", "traditional"]
+  },
+  {
+    "id": 59,
+    "task": "chat",
+    "difficulty": "easy",
+    "question": "Name three famous scientists and their contributions.",
+    "expected_answer": "Newton (gravity), Einstein (relativity), Curie (radioactivity).",
+    "keywords": ["Newton", "Einstein", "Curie", "scientist", "gravity", "relativity", "radioactivity"]
+  },
+  {
+    "id": 60,
+    "task": "chat",
+    "difficulty": "medium",
+    "question": "What is the difference between RAM and ROM in computers?",
+    "expected_answer": "RAM is temporary volatile memory used during operations; ROM is permanent non-volatile memory that stores firmware.",
+    "keywords": ["RAM", "ROM", "volatile", "temporary", "permanent", "firmware", "memory"]
+  }
+]

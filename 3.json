@@ -1,0 +1,67 @@
+{
+  "dataset_name": "Math Reasoning Dataset",
+  "type": "math",
+  "difficulty": "mixed",
+  "questions": [
+    {
+      "id": 1,
+      "question": "If a train travels 60 km in 1.5 hours, what is its average speed in km/h?",
+      "answer": "40",
+      "explanation": "Speed = distance/time = 60 / 1.5 = 40 km/h"
+    },
+    {
+      "id": 2,
+      "question": "A shopkeeper gives a 10% discount on a product priced at 500. What is the final price?",
+      "answer": "450",
+      "explanation": "10% of 500 = 50, so final price = 500 - 50 = 450"
+    },
+    {
+      "id": 3,
+      "question": "Solve: 2x + 5 = 15",
+      "answer": "5",
+      "explanation": "2x = 10 → x = 5"
+    },
+    {
+      "id": 4,
+      "question": "What is the area of a circle with radius 7? (Use π = 22/7)",
+      "answer": "154",
+      "explanation": "Area = πr² = (22/7)*49 = 154"
+    },
+    {
+      "id": 5,
+      "question": "If a car consumes 5 liters of fuel for 100 km, how much fuel is needed for 250 km?",
+      "answer": "12.5",
+      "explanation": "Fuel per km = 5/100 = 0.05 → 0.05*250 = 12.5"
+    },
+    {
+      "id": 6,
+      "question": "Find the simple interest on 1000 at 5% for 2 years.",
+      "answer": "100",
+      "explanation": "SI = (P × R × T)/100 = (1000×5×2)/100 = 100"
+    },
+    {
+      "id": 7,
+      "question": "Solve: 3x - 9 = 0",
+      "answer": "3",
+      "explanation": "3x = 9 → x = 3"
+    },
+    {
+      "id": 8,
+      "question": "What is 25% of 200?",
+      "answer": "50",
+      "explanation": "25% = 1/4 → 200/4 = 50"
+    },
+    {
+      "id": 9,
+      "question": "A rectangle has length 10 and width 5. What is its perimeter?",
+      "answer": "30",
+      "explanation": "Perimeter = 2(l + w) = 2(10+5) = 30"
+    },
+    {
+      "id": 10,
+      "question": "If 5 workers can complete a task in 10 days, how many days will 10 workers take?",
+      "answer": "5",
+      "explanation": "Work is inversely proportional → (5×10)/(10) = 5 days"
+    }
+  ]
+}

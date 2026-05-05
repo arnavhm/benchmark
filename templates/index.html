@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AI Model Benchmark Analyzer — Compare and evaluate LLMs with standard benchmarks and custom datasets including real Gemini API analysis." />
+  <title>AI Model Benchmark Analyzer</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/static/style.css" />
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <div class="app-container">
+
+    <!-- ═══ Header ════════════════════════════════════════════════════════════ -->
+    <header class="header" id="header">
+      <div class="header__badge">
+        <span></span> Live Dashboard
+      </div>
+      <h1 class="header__title">AI Model Benchmark Analyzer</h1>
+      <p class="header__subtitle">
+        Compare top LLMs across standard benchmarks and evaluate with your own custom datasets
+      </p>
+    </header>
+
+    <!-- ═══ Tab Navigation ═══════════════════════════════════════════════════ -->
+    <nav class="tab-nav" id="tab-nav" role="tablist">
+      <button class="tab-btn tab-btn--active" id="tab-dashboard" data-tab="dashboard" role="tab" aria-selected="true">
+        <span class="tab-btn__icon">📊</span> Standard Benchmarks
+      </button>
+      <button class="tab-btn" id="tab-custom" data-tab="custom" role="tab" aria-selected="false">
+        <span class="tab-btn__icon">🧪</span> Custom Benchmark Analysis
+      </button>
+    </nav>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         TAB 1: Standard Dashboard
+         ═════════════════════════════════════════════════════════════════════ -->
+    <div class="tab-panel tab-panel--active" id="panel-dashboard" role="tabpanel">
+
+      <!-- Stats Bar -->
+      <div class="stats-bar" id="stats-bar">
+        <div class="stat-card"><div class="stat-card__label">Loading...</div><div class="stat-card__value">—</div></div>
+        <div class="stat-card"><div class="stat-card__label">Loading...</div><div class="stat-card__value">—</div></div>
+        <div class="stat-card"><div class="stat-card__label">Loading...</div><div class="stat-card__value">—</div></div>
+        <div class="stat-card"><div class="stat-card__label">Loading...</div><div class="stat-card__value">—</div></div>
+      </div>
+
+      <!-- Benchmark Charts -->
+      <section class="section" id="benchmark-section">
+        <div class="section__header">
+          <div class="section__icon">📊</div>
+          <div>
+            <div class="section__title">Benchmark Comparison</div>
+            <div class="section__description">Side-by-side performance across all major benchmarks</div>
+          </div>
+        </div>
+
+        <div class="chart-grid" id="chart-grid">
+          <div class="chart-card chart-card--coding" id="card-coding">
+            <div class="chart-card__title">Coding — Software Engineering</div>
+            <div class="chart-wrapper"><canvas id="chart-coding"></canvas></div>
+          </div>
+          <div class="chart-card chart-card--math" id="card-math">
+            <div class="chart-card__title">Math — Quantitative Reasoning</div>
+            <div class="chart-wrapper"><canvas id="chart-math"></canvas></div>
+          </div>
+          <div class="chart-card chart-card--reasoning" id="card-reasoning">
+            <div class="chart-card__title">Reasoning — Complex Problem Solving</div>
+            <div class="chart-wrapper"><canvas id="chart-reasoning"></canvas></div>
+          </div>
+          <div class="chart-card chart-card--chat" id="card-chat">
+            <div class="chart-card__title">Chat — Conversation Quality</div>
+            <div class="chart-wrapper"><canvas id="chart-chat"></canvas></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recommendation Engine -->
+      <section class="section" id="recommend-section">
+        <div class="section__header">
+          <div class="section__icon">🎯</div>
+          <div>
+            <div class="section__title">Model Recommendation Engine</div>
+            <div class="section__description">Select your task and adjust weights to find the perfect model</div>
+          </div>
+        </div>
+
+        <div class="recommend-panel">
+
+          <!-- Controls -->
+          <div class="controls-card" id="controls-card">
+            <div class="task-selector">
+              <label class="task-selector__label">Choose Your Task</label>
+              <div class="task-grid" id="task-grid">
+                <button class="task-btn" data-task="Coding" id="task-coding">
+                  <span class="task-btn__icon">💻</span>
+                  <span class="task-btn__text">
+                    <span class="task-btn__name">Coding</span>
+                    <span class="task-btn__desc">Code generation &amp; debugging</span>
+                  </span>
+                </button>
+                <button class="task-btn" data-task="Math" id="task-math">
+                  <span class="task-btn__icon">🧮</span>
+                  <span class="task-btn__text">
+                    <span class="task-btn__name">Math</span>
+                    <span class="task-btn__desc">Mathematical reasoning</span>
+                  </span>
+                </button>
+                <button class="task-btn" data-task="Research" id="task-research">
+                  <span class="task-btn__icon">🔬</span>
+                  <span class="task-btn__text">
+                    <span class="task-btn__name">Research</span>
+                    <span class="task-btn__desc">Knowledge &amp; analysis</span>
+                  </span>
+                </button>
+                <button class="task-btn" data-task="Chatbot" id="task-chatbot">
+                  <span class="task-btn__icon">🤖</span>
+                  <span class="task-btn__text">
+                    <span class="task-btn__name">Chatbot</span>
+                    <span class="task-btn__desc">Conversational AI</span>
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Weight Sliders -->
+            <div class="sliders-section">
+              <div class="sliders-section__title">Adjust Benchmark Weights</div>
+
+              <div class="slider-group slider-group--coding">
+                <div class="slider-header">
+                  <label class="slider-label" for="coding-weight">
+                    <span class="slider-label__emoji">💻</span> Coding
+                  </label>
+                  <span class="slider-value" id="coding-weight-value">25</span>
+                </div>
+                <input type="range" id="coding-weight" min="0" max="100" value="25" />
+              </div>
+
+              <div class="slider-group slider-group--math">
+                <div class="slider-header">
+                  <label class="slider-label" for="math-weight">
+                    <span class="slider-label__emoji">🧮</span> Math
+                  </label>
+                  <span class="slider-value" id="math-weight-value">25</span>
+                </div>
+                <input type="range" id="math-weight" min="0" max="100" value="25" />
+              </div>
+
+              <div class="slider-group slider-group--reasoning">
+                <div class="slider-header">
+                  <label class="slider-label" for="reasoning-weight">
+                    <span class="slider-label__emoji">🧠</span> Reasoning
+                  </label>
+                  <span class="slider-value" id="reasoning-weight-value">25</span>
+                </div>
+                <input type="range" id="reasoning-weight" min="0" max="100" value="25" />
+              </div>
+
+              <div class="slider-group slider-group--chat">
+                <div class="slider-header">
+                  <label class="slider-label" for="chat-weight">
+                    <span class="slider-label__emoji">💬</span> Chat
+                  </label>
+                  <span class="slider-value" id="chat-weight-value">25</span>
+                </div>
+                <input type="range" id="chat-weight" min="0" max="100" value="25" />
+              </div>
+            </div>
+
+            <div class="ranking-controls">
+              <label class="ranking-control">
+                <span>Sort</span>
+                <select id="ranking-sort">
+                  <option value="score">Final Score</option>
+                  <option value="coding">Coding</option>
+                  <option value="math">Math</option>
+                  <option value="reasoning">Reasoning</option>
+                  <option value="chat">Chat</option>
+                  <option value="name">Name</option>
+                </select>
+              </label>
+              <label class="ranking-control">
+                <span>Filter</span>
+                <select id="ranking-filter">
+                  <option value="all">All Models</option>
+                  <option value="coding">Coding Leaders</option>
+                  <option value="math">Math Leaders</option>
+                  <option value="reasoning">Reasoning Leaders</option>
+                  <option value="chat">Chat Leaders</option>
+                </select>
+              </label>
+            </div>
+
+            <button class="analyze-btn" id="analyze-btn" onclick="analyzeModels()">
+              🔍 Analyze &amp; Recommend
+            </button>
+          </div>
+
+          <!-- Results -->
+          <div class="results-card" id="results-card">
+            <div id="results-container">
+              <div class="results-placeholder">
+                <div class="results-placeholder__icon">🎯</div>
+                <div class="results-placeholder__text">Ready to analyze</div>
+                <div class="results-placeholder__hint">Rankings update as weights, sorting, and filters change</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Model Insights -->
+      <section class="section insights-section" id="insights-section">
+        <div class="section__header">
+          <div class="section__icon">💡</div>
+          <div>
+            <div class="section__title">Insights Section</div>
+            <div class="section__description">Automatically generated takeaways from benchmark performance</div>
+            <div class="section__meta" id="last-updated">Last updated: Loading...</div>
+          </div>
+        </div>
+        <div class="insights-grid" id="insights-grid">
+          <!-- Dynamically populated by JS -->
+        </div>
+      </section>
+
+    </div><!-- /panel-dashboard -->
+
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         TAB 2: Custom Benchmark Analysis
+         ═════════════════════════════════════════════════════════════════════ -->
+    <div class="tab-panel" id="panel-custom" role="tabpanel">
+
+      <!-- ── API Status Banner ──────────────────────────────────────────────── -->
+      <div class="api-status-bar" id="api-status-bar">
+        <div class="api-status__dot" id="api-status-dot"></div>
+        <span id="api-status-text">Checking API status…</span>
+        <a href="#" class="api-status__link" id="api-status-link" style="display:none" target="_blank" rel="noopener">
+          Get free Gemini API key →
+        </a>
+      </div>
+
+      <!-- ── Controls ───────────────────────────────────────────────────────── -->
+      <section class="section" id="custom-controls-section">
+        <div class="section__header">
+          <div class="section__icon">🧪</div>
+          <div>
+            <div class="section__title">Custom Benchmark Analysis</div>
+            <div class="section__description">Evaluate GPT-4, Claude, Gemini &amp; Llama on 60 curated questions</div>
+          </div>
+        </div>
+
+        <div class="custom-controls-card" id="custom-controls-card">
+
+          <!-- Mode Toggle -->
+          <div class="control-row">
+            <span class="control-label">Evaluation Mode</span>
+            <div class="mode-toggle" id="mode-toggle" role="group" aria-label="Evaluation mode">
+              <button class="mode-btn mode-btn--active" id="mode-simulated" data-mode="simulated">
+                🎭 Simulated
+              </button>
+              <button class="mode-btn" id="mode-real" data-mode="real_api">
+                ⚡ Real API (Gemini)
+              </button>
+            </div>
+          </div>
+
+          <!-- Difficulty Filter -->
+          <div class="control-row">
+            <span class="control-label">Difficulty</span>
+            <div class="pill-group" id="difficulty-group" role="group" aria-label="Difficulty filter">
+              <button class="pill-btn pill-btn--active" data-diff="all"    id="diff-all">All</button>
+              <button class="pill-btn" data-diff="easy"   id="diff-easy">🟢 Easy</button>
+              <button class="pill-btn" data-diff="medium" id="diff-medium">🟡 Medium</button>
+              <button class="pill-btn" data-diff="hard"   id="diff-hard">🔴 Hard</button>
+            </div>
+          </div>
+
+          <!-- Category Filter -->
+          <div class="control-row">
+            <span class="control-label">Categories</span>
+            <div class="checkbox-group" id="category-group">
+              <label class="checkbox-label" for="cat-coding">
+                <input type="checkbox" id="cat-coding"    value="coding"    checked /> 💻 Coding
+              </label>
+              <label class="checkbox-label" for="cat-math">
+                <input type="checkbox" id="cat-math"      value="math"      checked /> 🧮 Math
+              </label>
+              <label class="checkbox-label" for="cat-reasoning">
+                <input type="checkbox" id="cat-reasoning" value="reasoning" checked /> 🧠 Reasoning
+              </label>
+              <label class="checkbox-label" for="cat-chat">
+                <input type="checkbox" id="cat-chat"      value="chat"      checked /> 💬 Chat
+              </label>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="control-row control-row--actions">
+            <button class="run-btn" id="run-benchmark-btn" onclick="runCustomBenchmark()">
+              🚀 Run Custom Benchmark
+            </button>
+            <label class="upload-btn" for="upload-dataset-input" title="Upload your own JSON dataset">
+              📂 Upload Dataset
+            </label>
+            <input type="file" id="upload-dataset-input" accept=".json,.csv,.txt,text/plain,text/csv,application/json" style="display:none" onchange="uploadDataset(this)" />
+          </div>
+
+          <!-- Upload status -->
+          <div id="upload-status" class="upload-status" style="display:none"></div>
+          <div id="manual-task-fallback" class="manual-task-fallback" style="display:none">
+            <span>Dataset type unclear</span>
+            <select id="manual-task-type">
+              <option value="coding">Coding</option>
+              <option value="math">Math</option>
+              <option value="reasoning">Reasoning</option>
+              <option value="chat">Chat</option>
+            </select>
+            <button type="button" onclick="reanalyzeUploadedDataset()">Apply</button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ── Results placeholder / loading ─────────────────────────────────── -->
+      <div id="custom-loading" class="custom-loading" style="display:none">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Running benchmark<span class="loading-dots"></span></div>
+        <div class="loading-sub" id="loading-sub">Evaluating models across all questions…</div>
+      </div>
+
+      <!-- ── Results Area (hidden until benchmark runs) ─────────────────────── -->
+      <div id="custom-results" style="display:none">
+
+        <!-- Meta info bar -->
+        <div class="results-meta" id="results-meta"></div>
+
+        <!-- Dataset Analysis Summary -->
+        <section class="section" id="dataset-analysis-section">
+          <div class="section__header">
+            <div class="section__icon">🧭</div>
+            <div>
+              <div class="section__title">Dataset Analysis Summary</div>
+              <div class="section__description">Task type, format, difficulty, and mapped benchmark signals</div>
+            </div>
+          </div>
+          <div id="dataset-analysis-summary"></div>
+        </section>
+
+        <!-- ── Recommendation Card ─────────────────────────────────────────── -->
+        <section class="section" id="custom-rec-section">
+          <div class="section__header">
+            <div class="section__icon">🏆</div>
+            <div>
+              <div class="section__title">Recommendation</div>
+              <div class="section__description">Best model based on your custom benchmark</div>
+            </div>
+          </div>
+          <div id="custom-recommendation"></div>
+        </section>
+
+        <!-- ── Overall Score Bar Chart ─────────────────────────────────────── -->
+        <section class="section">
+          <div class="section__header">
+            <div class="section__icon">📊</div>
+            <div>
+              <div class="section__title">Overall Model Scores</div>
+              <div class="section__description">Final scores averaged across all categories</div>
+            </div>
+          </div>
+          <div class="chart-card" id="overall-chart-card">
+            <div class="chart-wrapper chart-wrapper--tall">
+              <canvas id="custom-bar-chart"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── Category Radar Chart ────────────────────────────────────────── -->
+        <section class="section">
+          <div class="section__header">
+            <div class="section__icon">🕸️</div>
+            <div>
+              <div class="section__title">Category-Wise Comparison</div>
+              <div class="section__description">Radar chart showing strengths across each task type</div>
+            </div>
+          </div>
+          <div class="chart-card chart-card--radar" id="radar-chart-card">
+            <div class="chart-wrapper chart-wrapper--radar">
+              <canvas id="custom-radar-chart"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── Difficulty Breakdown ────────────────────────────────────────── -->
+        <section class="section">
+          <div class="section__header">
+            <div class="section__icon">🎯</div>
+            <div>
+              <div class="section__title">Difficulty Breakdown</div>
+              <div class="section__description">Performance across Easy, Medium, and Hard questions</div>
+            </div>
+          </div>
+          <div class="chart-card" id="difficulty-chart-card">
+            <div class="chart-wrapper">
+              <canvas id="custom-difficulty-chart"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── Response Time ───────────────────────────────────────────────── -->
+        <section class="section">
+          <div class="section__header">
+            <div class="section__icon">⏱️</div>
+            <div>
+              <div class="section__title">Average Response Time</div>
+              <div class="section__description">Simulated latency per model (seconds)</div>
+            </div>
+          </div>
+          <div class="chart-card" id="time-chart-card">
+            <div class="chart-wrapper">
+              <canvas id="custom-time-chart"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── Scores Table ────────────────────────────────────────────────── -->
+        <section class="section">
+          <div class="section__header">
+            <div class="section__icon">📋</div>
+            <div>
+              <div class="section__title">Detailed Scores Table</div>
+              <div class="section__description">Per-model scores across all categories</div>
+            </div>
+          </div>
+          <div class="table-card" id="scores-table-card">
+            <div id="scores-table-container"></div>
+          </div>
+        </section>
+
+      </div><!-- /custom-results -->
+
+    </div><!-- /panel-custom -->
+
+    <!-- ═══ Footer ════════════════════════════════════════════════════════════ -->
+    <footer class="footer">
+      <p>AI Model Benchmark Analyzer · Built with Flask, Chart.js &amp; Pandas · Custom Benchmarks powered by Gemini API</p>
+    </footer>
+
+  </div><!-- /app-container -->
+
+  <!-- Application Script -->
+  <script src="/static/script.js"></script>
+
+</body>
+</html>

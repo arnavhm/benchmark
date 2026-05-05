@@ -1,0 +1,17 @@
+{
+  "name": "ai-benchmark-analyzer",
+  "version": "2.0.0",
+  "description": "Dynamic AI model benchmark analyzer with weighted rankings and insight cards.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.3",
+    "multer": "^2.0.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

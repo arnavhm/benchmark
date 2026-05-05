@@ -1,0 +1,76 @@
+{
+  "dataset_name": "chat_benchmark_v1",
+  "description": "Conversational tasks focusing on tone, helpfulness, and multi-turn interaction",
+  "tasks": [
+    {
+      "id": 1,
+      "category": "casual_conversation",
+      "prompt": "Hey, I had a really stressful day at college today.",
+      "expected_behavior": "empathetic, supportive, conversational",
+      "evaluation_metrics": ["empathy", "engagement", "naturalness"]
+    },
+    {
+      "id": 2,
+      "category": "advice",
+      "prompt": "I feel like I'm wasting time and not being productive. What should I do?",
+      "expected_behavior": "practical advice, motivational tone, non-judgmental",
+      "evaluation_metrics": ["helpfulness", "clarity", "tone"]
+    },
+    {
+      "id": 3,
+      "category": "multi_turn",
+      "prompt": "User: I'm thinking of learning web development.\nAssistant: That's great! What interests you about it?\nUser: I want to build cool projects but don't know where to start.",
+      "expected_behavior": "context awareness, structured guidance, conversational flow",
+      "evaluation_metrics": ["context_retention", "guidance_quality", "flow"]
+    },
+    {
+      "id": 4,
+      "category": "explanation",
+      "prompt": "Explain blockchain to me like I'm a beginner, but keep it interesting.",
+      "expected_behavior": "simple explanation, engaging tone, avoids jargon",
+      "evaluation_metrics": ["clarity", "engagement", "simplicity"]
+    },
+    {
+      "id": 5,
+      "category": "roleplay",
+      "prompt": "Pretend you're a startup mentor and I'm pitching my idea: an AI app for students.",
+      "expected_behavior": "interactive, asks questions, constructive feedback",
+      "evaluation_metrics": ["interactivity", "relevance", "depth"]
+    },
+    {
+      "id": 6,
+      "category": "opinion",
+      "prompt": "Do you think AI will replace developers?",
+      "expected_behavior": "balanced opinion, nuanced reasoning, conversational tone",
+      "evaluation_metrics": ["balance", "depth", "clarity"]
+    },
+    {
+      "id": 7,
+      "category": "emotional_support",
+      "prompt": "I failed my exam and I feel really bad about it.",
+      "expected_behavior": "empathetic, encouraging, non-dismissive",
+      "evaluation_metrics": ["empathy", "supportiveness", "tone"]
+    },
+    {
+      "id": 8,
+      "category": "decision_help",
+      "prompt": "I'm confused between learning AI/ML and Web Development. What should I choose?",
+      "expected_behavior": "personalized guidance, structured comparison, actionable advice",
+      "evaluation_metrics": ["personalization", "clarity", "actionability"]
+    },
+    {
+      "id": 9,
+      "category": "fun_chat",
+      "prompt": "Tell me something interesting that will blow my mind.",
+      "expected_behavior": "engaging, surprising, fun tone",
+      "evaluation_metrics": ["engagement", "creativity", "delivery"]
+    },
+    {
+      "id": 10,
+      "category": "follow_up",
+      "prompt": "User: I want to wake up early.\nAssistant: Try sleeping earlier.\nUser: I tried that but I still can't wake up.",
+      "expected_behavior": "adaptive response, deeper problem solving, conversational continuity",
+      "evaluation_metrics": ["adaptability", "problem_solving", "continuity"]
+    }
+  ]
+}
