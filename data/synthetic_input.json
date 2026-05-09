@@ -1,0 +1,402 @@
+[
+    {
+        "id": 1,
+        "category": "LLM Architectures",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of LLM Architectures in 50 words.",
+        "ground_truth": "This is the ideal answer for LLM Architectures used for comparison...",
+        "difficulty": "Beginner"
+    },
+    {
+        "id": 2,
+        "category": "Cloud Computing",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Cloud Computing in 50 words.",
+        "ground_truth": "This is the ideal answer for Cloud Computing used for comparison...",
+        "difficulty": "Advanced"
+    },
+    {
+        "id": 3,
+        "category": "Big Data Pipelines",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Big Data Pipelines in 50 words.",
+        "ground_truth": "This is the ideal answer for Big Data Pipelines used for comparison...",
+        "difficulty": "Advanced"
+    },
+    {
+        "id": 4,
+        "category": "Big Data Pipelines",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Big Data Pipelines in 50 words.",
+        "ground_truth": "This is the ideal answer for Big Data Pipelines used for comparison...",
+        "difficulty": "Intermediate"
+    },
+    {
+        "id": 5,
+        "category": "Big Data Pipelines",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Big Data Pipelines in 50 words.",
+        "ground_truth": "This is the ideal answer for Big Data Pipelines used for comparison...",
+        "difficulty": "Advanced"
+    },
+    {
+        "id": 6,
+        "category": "Big Data Pipelines",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Big Data Pipelines in 50 words.",
+        "ground_truth": "This is the ideal answer for Big Data Pipelines used for comparison...",
+        "difficulty": "Advanced"
+    },
+    {
+        "id": 7,
+        "category": "Data Science",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Data Science in 50 words.",
+        "ground_truth": "This is the ideal answer for Data Science used for comparison...",
+        "difficulty": "Intermediate"
+    },
+    {
+        "id": 8,
+        "category": "Big Data Pipelines",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Big Data Pipelines in 50 words.",
+        "ground_truth": "This is the ideal answer for Big Data Pipelines used for comparison...",
+        "difficulty": "Advanced"
+    },
+    {
+        "id": 9,
+        "category": "Data Science",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Data Science in 50 words.",
+        "ground_truth": "This is the ideal answer for Data Science used for comparison...",
+        "difficulty": "Advanced"
+    },
+    {
+        "id": 10,
+        "category": "LLM Architectures",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of LLM Architectures in 50 words.",
+        "ground_truth": "This is the ideal answer for LLM Architectures used for comparison...",
+        "difficulty": "Beginner"
+    },
+    {
+        "id": 11,
+        "category": "Big Data Pipelines",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Big Data Pipelines in 50 words.",
+        "ground_truth": "This is the ideal answer for Big Data Pipelines used for comparison...",
+        "difficulty": "Advanced"
+    },
+    {
+        "id": 12,
+        "category": "Data Science",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Data Science in 50 words.",
+        "ground_truth": "This is the ideal answer for Data Science used for comparison...",
+        "difficulty": "Intermediate"
+    },
+    {
+        "id": 13,
+        "category": "LLM Architectures",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of LLM Architectures in 50 words.",
+        "ground_truth": "This is the ideal answer for LLM Architectures used for comparison...",
+        "difficulty": "Intermediate"
+    },
+    {
+        "id": 14,
+        "category": "LLM Architectures",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of LLM Architectures in 50 words.",
+        "ground_truth": "This is the ideal answer for LLM Architectures used for comparison...",
+        "difficulty": "Advanced"
+    },
+    {
+        "id": 15,
+        "category": "Cloud Computing",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Cloud Computing in 50 words.",
+        "ground_truth": "This is the ideal answer for Cloud Computing used for comparison...",
+        "difficulty": "Advanced"
+    },
+    {
+        "id": 16,
+        "category": "LLM Architectures",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of LLM Architectures in 50 words.",
+        "ground_truth": "This is the ideal answer for LLM Architectures used for comparison...",
+        "difficulty": "Intermediate"
+    },
+    {
+        "id": 17,
+        "category": "Data Science",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Data Science in 50 words.",
+        "ground_truth": "This is the ideal answer for Data Science used for comparison...",
+        "difficulty": "Advanced"
+    },
+    {
+        "id": 18,
+        "category": "Big Data Pipelines",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Big Data Pipelines in 50 words.",
+        "ground_truth": "This is the ideal answer for Big Data Pipelines used for comparison...",
+        "difficulty": "Intermediate"
+    },
+    {
+        "id": 19,
+        "category": "Cloud Computing",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Cloud Computing in 50 words.",
+        "ground_truth": "This is the ideal answer for Cloud Computing used for comparison...",
+        "difficulty": "Intermediate"
+    },
+    {
+        "id": 20,
+        "category": "Big Data Pipelines",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Big Data Pipelines in 50 words.",
+        "ground_truth": "This is the ideal answer for Big Data Pipelines used for comparison...",
+        "difficulty": "Beginner"
+    },
+    {
+        "id": 21,
+        "category": "LLM Architectures",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of LLM Architectures in 50 words.",
+        "ground_truth": "This is the ideal answer for LLM Architectures used for comparison...",
+        "difficulty": "Beginner"
+    },
+    {
+        "id": 22,
+        "category": "Big Data Pipelines",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Big Data Pipelines in 50 words.",
+        "ground_truth": "This is the ideal answer for Big Data Pipelines used for comparison...",
+        "difficulty": "Beginner"
+    },
+    {
+        "id": 23,
+        "category": "Cloud Computing",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Cloud Computing in 50 words.",
+        "ground_truth": "This is the ideal answer for Cloud Computing used for comparison...",
+        "difficulty": "Beginner"
+    },
+    {
+        "id": 24,
+        "category": "Data Science",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Data Science in 50 words.",
+        "ground_truth": "This is the ideal answer for Data Science used for comparison...",
+        "difficulty": "Beginner"
+    },
+    {
+        "id": 25,
+        "category": "LLM Architectures",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of LLM Architectures in 50 words.",
+        "ground_truth": "This is the ideal answer for LLM Architectures used for comparison...",
+        "difficulty": "Intermediate"
+    },
+    {
+        "id": 26,
+        "category": "Data Science",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Data Science in 50 words.",
+        "ground_truth": "This is the ideal answer for Data Science used for comparison...",
+        "difficulty": "Intermediate"
+    },
+    {
+        "id": 27,
+        "category": "Big Data Pipelines",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Big Data Pipelines in 50 words.",
+        "ground_truth": "This is the ideal answer for Big Data Pipelines used for comparison...",
+        "difficulty": "Advanced"
+    },
+    {
+        "id": 28,
+        "category": "Cloud Computing",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Cloud Computing in 50 words.",
+        "ground_truth": "This is the ideal answer for Cloud Computing used for comparison...",
+        "difficulty": "Beginner"
+    },
+    {
+        "id": 29,
+        "category": "Cloud Computing",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Cloud Computing in 50 words.",
+        "ground_truth": "This is the ideal answer for Cloud Computing used for comparison...",
+        "difficulty": "Intermediate"
+    },
+    {
+        "id": 30,
+        "category": "Big Data Pipelines",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Big Data Pipelines in 50 words.",
+        "ground_truth": "This is the ideal answer for Big Data Pipelines used for comparison...",
+        "difficulty": "Intermediate"
+    },
+    {
+        "id": 31,
+        "category": "Big Data Pipelines",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Big Data Pipelines in 50 words.",
+        "ground_truth": "This is the ideal answer for Big Data Pipelines used for comparison...",
+        "difficulty": "Advanced"
+    },
+    {
+        "id": 32,
+        "category": "Data Science",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Data Science in 50 words.",
+        "ground_truth": "This is the ideal answer for Data Science used for comparison...",
+        "difficulty": "Intermediate"
+    },
+    {
+        "id": 33,
+        "category": "LLM Architectures",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of LLM Architectures in 50 words.",
+        "ground_truth": "This is the ideal answer for LLM Architectures used for comparison...",
+        "difficulty": "Intermediate"
+    },
+    {
+        "id": 34,
+        "category": "LLM Architectures",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of LLM Architectures in 50 words.",
+        "ground_truth": "This is the ideal answer for LLM Architectures used for comparison...",
+        "difficulty": "Beginner"
+    },
+    {
+        "id": 35,
+        "category": "Big Data Pipelines",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Big Data Pipelines in 50 words.",
+        "ground_truth": "This is the ideal answer for Big Data Pipelines used for comparison...",
+        "difficulty": "Intermediate"
+    },
+    {
+        "id": 36,
+        "category": "Big Data Pipelines",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Big Data Pipelines in 50 words.",
+        "ground_truth": "This is the ideal answer for Big Data Pipelines used for comparison...",
+        "difficulty": "Intermediate"
+    },
+    {
+        "id": 37,
+        "category": "Data Science",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Data Science in 50 words.",
+        "ground_truth": "This is the ideal answer for Data Science used for comparison...",
+        "difficulty": "Advanced"
+    },
+    {
+        "id": 38,
+        "category": "Data Science",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Data Science in 50 words.",
+        "ground_truth": "This is the ideal answer for Data Science used for comparison...",
+        "difficulty": "Beginner"
+    },
+    {
+        "id": 39,
+        "category": "LLM Architectures",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of LLM Architectures in 50 words.",
+        "ground_truth": "This is the ideal answer for LLM Architectures used for comparison...",
+        "difficulty": "Intermediate"
+    },
+    {
+        "id": 40,
+        "category": "Cloud Computing",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Cloud Computing in 50 words.",
+        "ground_truth": "This is the ideal answer for Cloud Computing used for comparison...",
+        "difficulty": "Advanced"
+    },
+    {
+        "id": 41,
+        "category": "LLM Architectures",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of LLM Architectures in 50 words.",
+        "ground_truth": "This is the ideal answer for LLM Architectures used for comparison...",
+        "difficulty": "Beginner"
+    },
+    {
+        "id": 42,
+        "category": "LLM Architectures",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of LLM Architectures in 50 words.",
+        "ground_truth": "This is the ideal answer for LLM Architectures used for comparison...",
+        "difficulty": "Advanced"
+    },
+    {
+        "id": 43,
+        "category": "Big Data Pipelines",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Big Data Pipelines in 50 words.",
+        "ground_truth": "This is the ideal answer for Big Data Pipelines used for comparison...",
+        "difficulty": "Intermediate"
+    },
+    {
+        "id": 44,
+        "category": "Big Data Pipelines",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Big Data Pipelines in 50 words.",
+        "ground_truth": "This is the ideal answer for Big Data Pipelines used for comparison...",
+        "difficulty": "Beginner"
+    },
+    {
+        "id": 45,
+        "category": "Cloud Computing",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Cloud Computing in 50 words.",
+        "ground_truth": "This is the ideal answer for Cloud Computing used for comparison...",
+        "difficulty": "Advanced"
+    },
+    {
+        "id": 46,
+        "category": "LLM Architectures",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of LLM Architectures in 50 words.",
+        "ground_truth": "This is the ideal answer for LLM Architectures used for comparison...",
+        "difficulty": "Intermediate"
+    },
+    {
+        "id": 47,
+        "category": "LLM Architectures",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of LLM Architectures in 50 words.",
+        "ground_truth": "This is the ideal answer for LLM Architectures used for comparison...",
+        "difficulty": "Intermediate"
+    },
+    {
+        "id": 48,
+        "category": "Big Data Pipelines",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Big Data Pipelines in 50 words.",
+        "ground_truth": "This is the ideal answer for Big Data Pipelines used for comparison...",
+        "difficulty": "Beginner"
+    },
+    {
+        "id": 49,
+        "category": "Cloud Computing",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Cloud Computing in 50 words.",
+        "ground_truth": "This is the ideal answer for Cloud Computing used for comparison...",
+        "difficulty": "Beginner"
+    },
+    {
+        "id": 50,
+        "category": "Data Science",
+        "domain": "General Knowledge",
+        "prompt": "Explain the core principles of Data Science in 50 words.",
+        "ground_truth": "This is the ideal answer for Data Science used for comparison...",
+        "difficulty": "Intermediate"
+    }
+]

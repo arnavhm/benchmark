@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "task": "reasoning",
+    "difficulty": "easy",
+    "question": "If all cats are animals, and Fluffy is a cat, is Fluffy an animal?",
+    "expected_answer": "Yes, Fluffy is an animal (deductive reasoning from logical rules).",
+    "keywords": ["logical deduction", "categorical logic", "true/false", "premises"]
+  },
+  {
+    "id": 2,
+    "task": "reasoning",
+    "difficulty": "easy",
+    "question": "What comes next in this sequence? 2, 4, 6, 8, __",
+    "expected_answer": "10 (pattern: even numbers, increment by 2)",
+    "keywords": ["pattern recognition", "sequence", "arithmetic progression"]
+  },
+  {
+    "id": 3,
+    "task": "reasoning",
+    "difficulty": "easy",
+    "question": "A woman has two sons born at the same time but they're not twins. How is this possible?",
+    "expected_answer": "They are part of triplets (or multiple births with different parents is ruled out).",
+    "keywords": ["lateral thinking", "puzzle", "trick question", "assumption challenge"]
+  },
+  {
+    "id": 4,
+    "task": "reasoning",
+    "difficulty": "medium",
+    "question": "Three switches control three lightbulbs. You can't see the bulbs from the switch room. You can enter the room only once. How do you determine which switch controls which bulb?",
+    "expected_answer": "Turn on switch 1 for 5 mins, turn off. Turn on switch 2. Go check: hot = switch 1, on = switch 2, off = switch 3.",
+    "keywords": ["problem solving", "deductive reasoning", "creative thinking", "constraint satisfaction"]
+  },
+  {
+    "id": 5,
+    "task": "reasoning",
+    "difficulty": "medium",
+    "question": "If you have 5 different colored balls and 4 different colored boxes, and you must put at least one ball in each box, how many will have 2 balls?",
+    "expected_answer": "Exactly 1 box will have 2 balls (5 balls, 4 boxes, 1 ball in each = 5th ball goes somewhere, creating one box with 2).",
+    "keywords": ["combinatorics", "logic", "constraints", "pigeonhole principle"]
+  },
+  {
+    "id": 6,
+    "task": "reasoning",
+    "difficulty": "medium",
+    "question": "A farmer has a wolf, a goat, and cabbage. He needs to cross a river with a boat that holds only him and one item. The wolf eats the goat alone, the goat eats the cabbage alone. How does he cross?",
+    "expected_answer": "Goat first, return alone. Wolf or cabbage next (take goat back), goat stays. Cabbage or wolf last. Goat comes back final trip.",
+    "keywords": ["logic puzzle", "constraint satisfaction", "river crossing", "planning"]
+  },
+  {
+    "id": 7,
+    "task": "reasoning",
+    "difficulty": "hard",
+    "question": "What's the next number? 1, 4, 9, 16, 25, 36, __",
+    "expected_answer": "49 (perfect squares: 1^2, 2^2, 3^2, ... 7^2 = 49)",
+    "keywords": ["pattern recognition", "mathematical sequence", "perfect squares"]
+  },
+  {
+    "id": 8,
+    "task": "reasoning",
+    "difficulty": "hard",
+    "question": "Four people need to cross a bridge. They have one flashlight. A bridge can hold max 2 people. Times: A=1min, B=2min, C=5min, D=10min. When 2 cross, they move at slower speed. Minimum time?",
+    "expected_answer": "17 minutes: (A,B cross 2min, A back 1min, C,D cross 10min, B back 2min, A,B cross 2min = 17min)",
+    "keywords": ["optimization", "constraint satisfaction", "algorithmic thinking", "bridge crossing"]
+  },
+  {
+    "id": 9,
+    "task": "reasoning",
+    "difficulty": "hard",
+    "question": "In a town, there are two barbers. One has a neat shop and neat hair. One has messy shop and messy hair. Which is the better barber?",
+    "expected_answer": "The one with messy hair (because the other barber cut his hair poorly, implying the messy one is better).",
+    "keywords": ["lateral thinking", "assumption reversal", "logical paradox", "counterintuition"]
+  },
+  {
+    "id": 10,
+    "task": "reasoning",
+    "difficulty": "hard",
+    "question": "A man pushes his car to a hotel and tells the owner he's bankrupt. What happened?",
+    "expected_answer": "He's playing Monopoly (the game), not in real bankruptcy.",
+    "keywords": ["lateral thinking", "context", "word puzzle", "assumption challenge"]
+  },
+  {
+    "id": 11,
+    "task": "reasoning",
+    "difficulty": "hard",
+    "question": "What is always coming but never arrives?",
+    "expected_answer": "Tomorrow (always in the future, never actually here as 'tomorrow').",
+    "keywords": ["riddle", "philosophical reasoning", "temporal logic"]
+  },
+  {
+    "id": 12,
+    "task": "reasoning",
+    "difficulty": "hard",
+    "question": "If a red house is made of red bricks, a blue house is made of blue bricks, what is a greenhouse made of?",
+    "expected_answer": "Glass (trick question - assumes it follows pattern, but greenhouse is transparent structure).",
+    "keywords": ["trick question", "assumption challenge", "lateral thinking"]
+  },
+  {
+    "id": 13,
+    "task": "chat",
+    "difficulty": "medium",
+    "question": "Explain why a chess grandmaster is considered intelligent in a conversational way.",
+    "expected_answer": "Requires strategic thinking, pattern recognition, deep planning, analysis of complex scenarios.",
+    "keywords": ["conversational reasoning", "explanation", "intelligence", "chess"]
+  },
+  {
+    "id": 14,
+    "task": "chat",
+    "difficulty": "hard",
+    "question": "Discuss the Fermi paradox (where are all the aliens?) and propose potential resolutions.",
+    "expected_answer": "Paradox: universe is vast, but no sign of aliens. Solutions: Great Filter, life rare, self-destroy, rare Earth, simulation.",
+    "keywords": ["Fermi paradox", "philosophical reasoning", "astrobiology", "discussion"]
+  },
+  {
+    "id": 15,
+    "task": "chat",
+    "difficulty": "hard",
+    "question": "If you had to choose between being intelligent or wise, which would you choose and why?",
+    "expected_answer": "Subjective, should discuss: intelligence = knowledge/problem solving, wisdom = judgment/discernment. Wisdom often more valuable.",
+    "keywords": ["philosophical", "reasoning", "wisdom vs intelligence", "value judgment"]
+  }
+]

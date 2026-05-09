@@ -1,0 +1,140 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: benchmark_postgres
+    environment:
+      POSTGRES_USER: benchmark_user
+      POSTGRES_PASSWORD: benchmark_pass
+      POSTGRES_DB: benchmark_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U benchmark_user -d benchmark_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - benchmark_network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: benchmark_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - benchmark_network
+
+  # Application Backend
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: benchmark_app
+    environment:
+      DB_URL: postgresql://benchmark_user:benchmark_pass@postgres:5432/benchmark_db
+      CACHE_URL: redis://redis:6379/0
+      API_HOST: 0.0.0.0
+      API_PORT: 5002
+      ENVIRONMENT: development
+    ports:
+      - "5002:5002"
+    volumes:
+      - .:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - benchmark_network
+    command: uvicorn api:app --host 0.0.0.0 --port 5002
+
+  # Prometheus Monitoring
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: benchmark_prometheus
+    profiles: ["monitoring"]
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/alerts.yml:/etc/prometheus/alerts.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+    networks:
+      - benchmark_network
+    depends_on:
+      - app
+
+  # Grafana Dashboards
+  grafana:
+    image: grafana/grafana:latest
+    container_name: benchmark_grafana
+    profiles: ["monitoring"]
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_SECURITY_ADMIN_USER: admin
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+    networks:
+      - benchmark_network
+    depends_on:
+      - prometheus
+
+  # Elasticsearch for Logging
+  elasticsearch:
+    image: opensearchproject/opensearch:2.9.0
+    container_name: benchmark_elasticsearch
+    profiles: ["monitoring"]
+    environment:
+      - discovery.type=single-node
+      - OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/opensearch/data
+    networks:
+      - benchmark_network
+
+  # Kibana for Log Visualization
+  kibana:
+    image: opensearchproject/opensearch-dashboards:2.9.0
+    container_name: benchmark_kibana
+    profiles: ["monitoring"]
+    ports:
+      - "5601:5601"
+    environment:
+      OPENSEARCH_HOSTS: http://elasticsearch:9200
+    networks:
+      - benchmark_network
+    depends_on:
+      - elasticsearch
+
+volumes:
+  postgres_data:
+  redis_data:
+  prometheus_data:
+  grafana_data:
+  elasticsearch_data:
+
+networks:
+  benchmark_network:
+    driver: bridge

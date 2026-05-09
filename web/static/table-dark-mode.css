@@ -1,0 +1,484 @@
+/* ═══════════════════════════════════════════════════════════════════════════════
+   Dark Mode Dashboard — Results Table & Tier Badges
+   Modern glassmorphism design with glowing Production tier effect
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Results Table Container ───────────────────────────────────────────────── */
+#results-table-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: 28px;
+  backdrop-filter: blur(20px);
+  overflow: hidden;
+  animation: fadeInUp 0.6s ease-out 0.3s both;
+  margin-bottom: 32px;
+}
+
+#results-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.88rem;
+}
+
+#results-table thead {
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 2px solid var(--border-subtle);
+}
+
+#results-table th {
+  padding: 14px 18px;
+  text-align: left;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent);
+}
+
+#results-table-body {
+  display: contents;
+}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   RESULT ROW — MODERN HOVER EFFECT
+   ═════════════════════════════════════════════════════════════════════════════ */
+
+.result-row {
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  border-bottom: 1px solid var(--border-subtle);
+  display: table-row;
+  position: relative;
+}
+
+/* Main hover effect with gradient background */
+.result-row:hover {
+  background: linear-gradient(90deg, 
+    rgba(108, 92, 231, 0.08) 0%,
+    rgba(108, 92, 231, 0.04) 50%,
+    rgba(162, 155, 254, 0.04) 100%
+  );
+  border-bottom-color: var(--border-accent);
+  box-shadow: inset 0 0 20px rgba(108, 92, 231, 0.08);
+}
+
+/* Brighten text on hover */
+.result-row:hover .result-col {
+  color: var(--text-primary);
+}
+
+.result-row:last-child {
+  border-bottom: none;
+}
+
+/* Remove bottom border on last row */
+.result-row:last-child td {
+  border-bottom: none;
+}
+
+/* ─── Individual Column Styling ─────────────────────────────────────────────── */
+.result-col {
+  padding: 16px 18px;
+  color: var(--text-secondary);
+  transition: color 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  display: table-cell;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+/* Rank Column */
+.result-col--rank {
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-muted);
+  width: 50px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+/* Model Name Column */
+.result-col--model {
+  font-weight: 700;
+  color: var(--text-primary);
+  min-width: 140px;
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
+}
+
+/* Final Score Column */
+.result-col--score {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  min-width: 100px;
+  text-align: center;
+}
+
+/* ─── Score Badge Styling ───────────────────────────────────────────────────── */
+.score-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  height: 32px;
+  background: linear-gradient(135deg, rgba(108, 92, 231, 0.15), rgba(162, 155, 254, 0.08));
+  border: 1px solid rgba(108, 92, 231, 0.3);
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent-secondary);
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Score badge hover effect */
+.result-row:hover .score-badge {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 16px rgba(108, 92, 231, 0.3),
+              inset 0 0 8px rgba(108, 92, 231, 0.1);
+  transform: scale(1.08);
+}
+
+/* High score (80+) — Green */
+.score-badge--high {
+  background: linear-gradient(135deg, rgba(0, 184, 148, 0.15), rgba(0, 206, 201, 0.08));
+  border-color: rgba(0, 184, 148, 0.4);
+  color: #00b894;
+}
+
+.result-row:hover .score-badge--high {
+  border-color: rgba(0, 184, 148, 0.6);
+  box-shadow: 0 0 16px rgba(0, 184, 148, 0.35),
+              inset 0 0 8px rgba(0, 184, 148, 0.1);
+}
+
+/* Mid score (70-80) — Gold */
+.score-badge--mid {
+  background: linear-gradient(135deg, rgba(253, 203, 110, 0.15), rgba(253, 121, 168, 0.08));
+  border-color: rgba(253, 203, 110, 0.4);
+  color: #fdcb6e;
+}
+
+.result-row:hover .score-badge--mid {
+  border-color: rgba(253, 203, 110, 0.6);
+  box-shadow: 0 0 16px rgba(253, 203, 110, 0.35),
+              inset 0 0 8px rgba(253, 203, 110, 0.1);
+}
+
+/* Low score (<70) — Red */
+.score-badge--low {
+  background: linear-gradient(135deg, rgba(225, 112, 85, 0.15), rgba(211, 84, 0, 0.08));
+  border-color: rgba(225, 112, 85, 0.4);
+  color: #e17055;
+}
+
+.result-row:hover .score-badge--low {
+  border-color: rgba(225, 112, 85, 0.6);
+  box-shadow: 0 0 16px rgba(225, 112, 85, 0.35),
+              inset 0 0 8px rgba(225, 112, 85, 0.1);
+}
+
+/* ─── Metric Columns (Accuracy, Latency, Cost) ──────────────────────────────── */
+.result-col--accuracy,
+.result-col--latency,
+.result-col--cost {
+  text-align: center;
+  min-width: 100px;
+  font-size: 0.86rem;
+}
+
+.metric-value {
+  display: block;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 2px;
+  letter-spacing: -0.01em;
+}
+
+.metric-label {
+  display: block;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   TIER BADGES — MAIN FEATURE
+   ═════════════════════════════════════════════════════════════════════════════ */
+
+.result-col--tier {
+  text-align: center;
+  min-width: 130px;
+}
+
+.tier-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: var(--radius-lg);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1.5px solid;
+  min-width: 110px;
+  position: relative;
+  backdrop-filter: blur(8px);
+}
+
+/* ╔════════════════════════════════════════════════════════════════════════╗
+   ║           🟢 PRODUCTION TIER — GLOWING EFFECT (HERO STYLE)           ║
+   ╚════════════════════════════════════════════════════════════════════════╝ */
+
+.tier-production {
+  background: linear-gradient(135deg, 
+    rgba(0, 184, 148, 0.25),
+    rgba(0, 206, 201, 0.12)
+  );
+  color: #00b894;
+  border-color: rgba(0, 184, 148, 0.7);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  box-shadow: 0 0 16px rgba(0, 184, 148, 0.3),
+              inset 0 0 8px rgba(0, 184, 148, 0.15);
+}
+
+/* Checkmark icon before text */
+.tier-production::before {
+  content: '✓';
+  position: absolute;
+  left: 8px;
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: #00b894;
+}
+
+/* Continuous glowing border animation */
+.tier-production::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: var(--radius-lg);
+  border: 2px solid rgba(0, 184, 148, 0.5);
+  opacity: 1;
+  animation: productionGlow 3s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+@keyframes productionGlow {
+  0%, 100% {
+    box-shadow: 0 0 12px rgba(0, 184, 148, 0.4),
+                0 0 24px rgba(0, 206, 201, 0.2),
+                inset 0 0 12px rgba(0, 184, 148, 0.1);
+    border-color: rgba(0, 184, 148, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 24px rgba(0, 184, 148, 0.6),
+                0 0 48px rgba(0, 206, 201, 0.4),
+                inset 0 0 16px rgba(0, 184, 148, 0.2);
+    border-color: rgba(0, 184, 148, 0.7);
+  }
+}
+
+/* Enhanced hover for Production tier */
+.result-row:hover .tier-production {
+  transform: scale(1.12) translateY(-2px);
+  border-color: rgba(0, 184, 148, 0.9);
+  box-shadow: 0 0 20px rgba(0, 184, 148, 0.6),
+              0 0 40px rgba(0, 206, 201, 0.4),
+              inset 0 0 12px rgba(0, 184, 148, 0.25);
+  background: linear-gradient(135deg, 
+    rgba(0, 184, 148, 0.35),
+    rgba(0, 206, 201, 0.2)
+  );
+}
+
+/* ─── Analysis Tier (Amber) ─────────────────────────────────────────────────── */
+.tier-analysis {
+  background: linear-gradient(135deg, 
+    rgba(253, 203, 110, 0.18),
+    rgba(253, 121, 168, 0.1)
+  );
+  color: #fdcb6e;
+  border-color: rgba(253, 203, 110, 0.6);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  box-shadow: 0 0 12px rgba(253, 203, 110, 0.2),
+              inset 0 0 6px rgba(253, 203, 110, 0.1);
+}
+
+/* Diamond icon before text */
+.tier-analysis::before {
+  content: '◊';
+  position: absolute;
+  left: 10px;
+  font-size: 0.9rem;
+  color: #fdcb6e;
+}
+
+/* Analysis tier hover */
+.result-row:hover .tier-analysis {
+  transform: scale(1.08) translateY(-1px);
+  border-color: rgba(253, 203, 110, 0.8);
+  box-shadow: 0 0 16px rgba(253, 203, 110, 0.4),
+              inset 0 0 8px rgba(253, 203, 110, 0.15);
+}
+
+/* ─── Research Tier (Red) ───────────────────────────────────────────────────── */
+.tier-research {
+  background: linear-gradient(135deg, 
+    rgba(225, 112, 85, 0.15),
+    rgba(211, 84, 0, 0.08)
+  );
+  color: #e17055;
+  border-color: rgba(225, 112, 85, 0.5);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  box-shadow: 0 0 8px rgba(225, 112, 85, 0.15),
+              inset 0 0 4px rgba(225, 112, 85, 0.08);
+}
+
+/* Exclamation icon before text */
+.tier-research::before {
+  content: '!';
+  position: absolute;
+  left: 10px;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #e17055;
+}
+
+/* Research tier hover */
+.result-row:hover .tier-research {
+  transform: scale(1.06) translateY(-1px);
+  border-color: rgba(225, 112, 85, 0.7);
+  box-shadow: 0 0 12px rgba(225, 112, 85, 0.35),
+              inset 0 0 6px rgba(225, 112, 85, 0.12);
+}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   RESPONSIVE DESIGN
+   ═════════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 1200px) {
+  #results-table {
+    font-size: 0.82rem;
+  }
+  
+  .result-col {
+    padding: 12px 14px;
+  }
+  
+  .result-col--model {
+    min-width: 120px;
+  }
+  
+  .tier-badge {
+    padding: 7px 14px;
+    font-size: 0.75rem;
+    min-width: 100px;
+  }
+}
+
+@media (max-width: 768px) {
+  #results-table-container {
+    padding: 16px;
+  }
+  
+  #results-table {
+    font-size: 0.76rem;
+  }
+  
+  #results-table th,
+  .result-col {
+    padding: 10px 12px;
+  }
+  
+  .result-col--rank,
+  .result-col--accuracy,
+  .result-col--latency,
+  .result-col--cost {
+    font-size: 0.72rem;
+  }
+  
+  .metric-value {
+    font-size: 0.8rem;
+  }
+  
+  .metric-label {
+    font-size: 0.6rem;
+  }
+  
+  .tier-badge {
+    padding: 6px 12px;
+    font-size: 0.68rem;
+    min-width: 85px;
+  }
+  
+  /* Hide icon on mobile to save space */
+  .tier-production::before,
+  .tier-analysis::before,
+  .tier-research::before {
+    display: none;
+  }
+  
+  /* Adjust score badge on mobile */
+  .score-badge {
+    height: 28px;
+    min-width: 42px;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  #results-table-container {
+    padding: 12px;
+  }
+  
+  #results-table th {
+    font-size: 0.65rem;
+    padding: 8px 10px;
+  }
+  
+  .result-col {
+    padding: 8px 10px;
+  }
+  
+  .result-col--rank {
+    width: 40px;
+    font-size: 0.8rem;
+  }
+  
+  .result-col--model {
+    font-size: 0.85rem;
+    min-width: 100px;
+  }
+  
+  .tier-badge {
+    padding: 5px 10px;
+    font-size: 0.65rem;
+    min-width: 75px;
+  }
+}
+
+/* Smooth transitions and animations */
+@keyframes fadeInUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}

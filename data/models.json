@@ -14,29 +14,29 @@
     {
       "name": "GPT-5.4 Pro",
       "provider": "OpenAI",
-      "coding": 97.4,
-      "math": 95.6,
-      "reasoning": 98.0,
-      "chat": 94.9,
-      "bestUseCase": "maximum-performance analysis, advanced coding, and long-horizon agent tasks"
+      "coding": 98.1,
+      "math": 94.3,
+      "reasoning": 96.7,
+      "chat": 95.2,
+      "bestUseCase": "production-grade coding, software architecture, and engineering-focused tasks"
     },
     {
       "name": "Gemini 3.1 Pro",
       "provider": "Google",
-      "coding": 93.8,
-      "math": 96.1,
-      "reasoning": 97.2,
-      "chat": 93.7,
-      "bestUseCase": "complex reasoning, multimodal research, and synthesis-heavy analysis"
+      "coding": 92.5,
+      "math": 97.8,
+      "reasoning": 96.9,
+      "chat": 93.2,
+      "bestUseCase": "mathematical reasoning, quantitative analysis, and STEM problem-solving"
     },
     {
       "name": "Claude Opus 4.7",
       "provider": "Anthropic",
-      "coding": 97.0,
-      "math": 94.7,
-      "reasoning": 97.6,
-      "chat": 96.2,
-      "bestUseCase": "large codebase work, careful analysis, and polished professional writing"
+      "coding": 97.5,
+      "math": 93.2,
+      "reasoning": 98.2,
+      "chat": 96.8,
+      "bestUseCase": "code review, detailed analysis, careful reasoning, and nuanced writing"
     },
     {
       "name": "Claude Opus 4.6",
@@ -59,20 +59,20 @@
     {
       "name": "Qwen3 Max",
       "provider": "Alibaba",
-      "coding": 92.8,
-      "math": 94.8,
-      "reasoning": 93.5,
-      "chat": 91.8,
-      "bestUseCase": "math-heavy work, multilingual systems, and open ecosystem integration"
+      "coding": 91.5,
+      "math": 96.8,
+      "reasoning": 92.8,
+      "chat": 90.2,
+      "bestUseCase": "mathematical computation, multilingual processing, and cost-effective solutions"
     },
     {
       "name": "DeepSeek-V3.2 Reasoner",
       "provider": "DeepSeek",
-      "coding": 93.6,
-      "math": 95.4,
-      "reasoning": 96.0,
-      "chat": 90.5,
-      "bestUseCase": "reasoning-first agent workflows, math, and cost-sensitive API usage"
+      "coding": 91.2,
+      "math": 93.6,
+      "reasoning": 97.8,
+      "chat": 89.8,
+      "bestUseCase": "logic puzzles, reasoning chains, abstract problem-solving, and planning"
     }
   ]
 }

@@ -60,8 +60,48 @@ function buildCategoryScores(ranking) {
   }, {});
 }
 
+function buildScoreBreakdown(model, normalizedWeights) {
+  const breakdown = {
+    coding: {
+      raw_score: Number(model.coding.toFixed(1)),
+      weight_percent: Number((normalizedWeights.coding * 100).toFixed(1)),
+      contribution: Number((model.coding * normalizedWeights.coding).toFixed(1))
+    },
+    math: {
+      raw_score: Number(model.math.toFixed(1)),
+      weight_percent: Number((normalizedWeights.math * 100).toFixed(1)),
+      contribution: Number((model.math * normalizedWeights.math).toFixed(1))
+    },
+    reasoning: {
+      raw_score: Number(model.reasoning.toFixed(1)),
+      weight_percent: Number((normalizedWeights.reasoning * 100).toFixed(1)),
+      contribution: Number((model.reasoning * normalizedWeights.reasoning).toFixed(1))
+    },
+    chat: {
+      raw_score: Number(model.chat.toFixed(1)),
+      weight_percent: Number((normalizedWeights.chat * 100).toFixed(1)),
+      contribution: Number((model.chat * normalizedWeights.chat).toFixed(1))
+    }
+  };
+
+  breakdown.total_contribution = Number((
+    breakdown.coding.contribution +
+    breakdown.math.contribution +
+    breakdown.reasoning.contribution +
+    breakdown.chat.contribution
+  ).toFixed(1));
+
+  const categories = ["coding", "math", "reasoning", "chat"];
+  breakdown.formula = categories
+    .map(cat => `${breakdown[cat].raw_score}×${(breakdown[cat].weight_percent/100).toFixed(2)}`)
+    .join(" + ");
+
+  return breakdown;
+}
+
 function recommendModelsForDataset(models, analysis) {
   const weights = weightsForDataset(analysis);
+  const normalizedWeights = normalizeWeights(weights);
   const ranking = getRankedModels(models, weights, { sortBy: "score", filterCategory: "all" });
   const topThree = ranking.slice(0, 3);
   const benchmarks = mapToBenchmarks(analysis);
@@ -77,7 +117,7 @@ function recommendModelsForDataset(models, analysis) {
     reasoning_required: analysis.reasoning_required,
     benchmarks,
     weights,
-    normalizedWeights: normalizeWeights(weights),
+    normalizedWeights,
     recommendedModel: top?.model || "",
     ranking: topThree.map((model) => ({
       rank: model.rank,
@@ -91,7 +131,8 @@ function recommendModelsForDataset(models, analysis) {
       reasoningText: model.analysis.reasoning,
       strengths: model.analysis.strengths,
       weaknesses: model.analysis.weaknesses,
-      bestUseCase: model.analysis.bestUseCase
+      bestUseCase: model.analysis.bestUseCase,
+      score_breakdown: buildScoreBreakdown(model, normalizedWeights)
     })),
     allRankings: ranking,
     confidence,
@@ -113,6 +154,20 @@ function toCustomResultsPayload(recommendation, analysis, sourceMeta) {
     reasoning: item.reasoning,
     chat: item.chat
   })));
+
+  // Build scoring methodology explanation
+  const scoringMetadata = {
+    formula: "final_score = Σ(category_raw_score × normalized_weight)",
+    weights_applied: recommendation.weights,
+    normalized_weights: recommendation.normalizedWeights,
+    weight_explanation: `Weights are automatically adjusted based on dataset type (${analysis.type}), difficulty (${analysis.difficulty}), and format (${analysis.format}), then normalized to sum to 100%`,
+    categories_explained: {
+      coding: "Performance on programming/code implementation tasks",
+      math: "Performance on mathematical reasoning and calculation tasks",
+      reasoning: "Performance on complex reasoning and logic tasks",
+      chat: "Performance on conversational and dialogue tasks"
+    }
+  };
 
   return {
     datasetType: recommendation.datasetType,
@@ -164,8 +219,9 @@ function toCustomResultsPayload(recommendation, analysis, sourceMeta) {
     mode: analysis.analyzer,
     total_questions: analysis.size,
     difficulty_filter: analysis.difficulty,
-    gemini_api_used: false,
-    fallback_count: analysis.analyzer === "llm" ? 0 : 1
+    gemini_api_used: analysis.analyzer === "gemini",
+    fallback_count: analysis.analyzer === "gemini" ? 0 : 1,
+    scoring_metadata: scoringMetadata
   };
 }
 

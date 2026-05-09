@@ -8,6 +8,7 @@
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="/static/table-dark-mode.css" />
 
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
@@ -216,6 +217,75 @@
         </div>
       </section>
 
+      <!-- ═══ Scoring Methodology ══════════════════════════════════════════════ -->
+      <section class="section" id="static-scoring-section">
+        <details class="methodology-details">
+          <summary class="methodology-summary">
+            <div class="section__header" style="display:inline-flex;margin:0">
+              <div class="section__icon">📐</div>
+              <div>
+                <div class="section__title">Scoring Methodology</div>
+                <div class="section__description">How the recommendation engine ranks models — click to expand</div>
+              </div>
+            </div>
+          </summary>
+
+          <div class="methodology-body">
+
+            <!-- Formula -->
+            <div class="meth-block">
+              <h4 class="meth-block__title">Scoring Formula</h4>
+              <div class="formula-box">
+                <code>final_score = coding×w<sub>c</sub> + math×w<sub>m</sub> + reasoning×w<sub>r</sub> + chat×w<sub>ch</sub></code>
+              </div>
+              <p class="meth-block__desc">
+                Each model's raw benchmark score in a category is multiplied by that category's
+                normalized weight, then all four contributions are summed. Weights are normalized
+                so they always sum to 100%, regardless of the values you enter.
+              </p>
+            </div>
+
+            <!-- Default weights -->
+            <div class="meth-block">
+              <h4 class="meth-block__title">Default Weights (equal mix)</h4>
+              <div class="meth-weights">
+                <div class="meth-weight-row"><span class="meth-cat meth-cat--coding">💻 Coding</span><div class="meth-bar-wrap"><div class="meth-bar" style="width:25%;background:var(--accent-primary)"></div></div><span class="meth-pct">25%</span></div>
+                <div class="meth-weight-row"><span class="meth-cat meth-cat--math">🧮 Math</span><div class="meth-bar-wrap"><div class="meth-bar" style="width:25%;background:var(--accent-gold)"></div></div><span class="meth-pct">25%</span></div>
+                <div class="meth-weight-row"><span class="meth-cat meth-cat--reasoning">🧠 Reasoning</span><div class="meth-bar-wrap"><div class="meth-bar" style="width:25%;background:var(--accent-success)"></div></div><span class="meth-pct">25%</span></div>
+                <div class="meth-weight-row"><span class="meth-cat meth-cat--chat">💬 Chat</span><div class="meth-bar-wrap"><div class="meth-bar" style="width:25%;background:var(--accent-warm)"></div></div><span class="meth-pct">25%</span></div>
+              </div>
+              <p class="meth-block__desc">
+                Use the sliders in the Recommendation Engine above to shift weights toward your
+                workload — e.g., set Coding to 60 for a software-engineering use case.
+              </p>
+            </div>
+
+            <!-- Worked example -->
+            <div class="meth-block">
+              <h4 class="meth-block__title">Worked Example — Claude Opus 4.7 with equal weights</h4>
+              <div class="meth-example">
+                <div class="meth-ex-row"><span class="meth-ex-cat">Coding</span><span class="meth-ex-calc">97.5 × 0.25</span><span class="meth-ex-eq">=</span><span class="meth-ex-contrib">24.4</span></div>
+                <div class="meth-ex-row"><span class="meth-ex-cat">Math</span><span class="meth-ex-calc">93.2 × 0.25</span><span class="meth-ex-eq">=</span><span class="meth-ex-contrib">23.3</span></div>
+                <div class="meth-ex-row"><span class="meth-ex-cat">Reasoning</span><span class="meth-ex-calc">98.2 × 0.25</span><span class="meth-ex-eq">=</span><span class="meth-ex-contrib">24.6</span></div>
+                <div class="meth-ex-row"><span class="meth-ex-cat">Chat</span><span class="meth-ex-calc">96.8 × 0.25</span><span class="meth-ex-eq">=</span><span class="meth-ex-contrib">24.2</span></div>
+                <div class="meth-ex-row meth-ex-row--total"><span class="meth-ex-cat">Final Score</span><span class="meth-ex-calc"></span><span class="meth-ex-eq">=</span><span class="meth-ex-contrib meth-ex-contrib--total">96.4</span></div>
+              </div>
+            </div>
+
+            <!-- Tier thresholds -->
+            <div class="meth-block">
+              <h4 class="meth-block__title">Deployment Tier Thresholds</h4>
+              <div class="meth-tiers">
+                <div class="meth-tier meth-tier--production"><span class="meth-tier__label">Production</span><span class="meth-tier__range">score &gt; 85</span><span class="meth-tier__desc">Ready for real-time customer-facing use</span></div>
+                <div class="meth-tier meth-tier--analysis"><span class="meth-tier__label">Analysis</span><span class="meth-tier__range">70 &lt; score ≤ 85</span><span class="meth-tier__desc">Suitable for offline or batch processing</span></div>
+                <div class="meth-tier meth-tier--research"><span class="meth-tier__label">Research</span><span class="meth-tier__range">score ≤ 70</span><span class="meth-tier__desc">Needs further fine-tuning before deployment</span></div>
+              </div>
+            </div>
+
+          </div><!-- /methodology-body -->
+        </details>
+      </section>
+
       <!-- Model Insights -->
       <section class="section insights-section" id="insights-section">
         <div class="section__header">
@@ -353,6 +423,42 @@
             </div>
           </div>
           <div id="dataset-analysis-summary"></div>
+        </section>
+
+        <!-- ── Evaluation Metrics ─────────────────────────────────────────── -->
+        <section class="section" id="eval-metrics-section">
+          <div class="section__header">
+            <div class="section__icon">🎯</div>
+            <div>
+              <div class="section__title">Evaluation Metrics</div>
+              <div class="section__description">Per-question correctness, keyword F1, and statistical significance across 5 independent trials</div>
+            </div>
+          </div>
+          <div id="eval-metrics-container"></div>
+        </section>
+
+        <!-- ── Scoring Methodology ─────────────────────────────────────────── -->
+        <section class="section" id="scoring-section">
+          <div class="section__header">
+            <div class="section__icon">📐</div>
+            <div>
+              <div class="section__title">Scoring Methodology</div>
+              <div class="section__description">How final scores are calculated from weighted category scores</div>
+            </div>
+          </div>
+          <div id="scoring-methodology"></div>
+        </section>
+
+        <!-- ── Detailed Score Breakdowns ───────────────────────────────────── -->
+        <section class="section" id="breakdown-section">
+          <div class="section__header">
+            <div class="section__icon">🔍</div>
+            <div>
+              <div class="section__title">Model Score Breakdowns</div>
+              <div class="section__description">See exactly how each model's score was calculated</div>
+            </div>
+          </div>
+          <div id="model-score-breakdowns"></div>
         </section>
 
         <!-- ── Recommendation Card ─────────────────────────────────────────── -->

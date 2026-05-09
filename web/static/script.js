@@ -120,6 +120,14 @@ async function checkApiStatus() {
   try {
     const resp = await fetch('/api-status');
     const data = await resp.json();
+
+    // Defensive normalization: ensure UI keys exist to avoid runtime errors
+    data.models = data.models || (data.rankings ? data.rankings.map(r => r.model) : []);
+    data.overall_scores = data.overall_scores || {};
+    data.category_scores = data.category_scores || {};
+    data.avg_response_times = data.avg_response_times || {};
+    data.recommendation = data.recommendation || {};
+    data.model_colors = data.model_colors || {};
     const dot  = document.getElementById('api-status-dot');
     const txt  = document.getElementById('api-status-text');
     const link = document.getElementById('api-status-link');
@@ -137,9 +145,9 @@ async function checkApiStatus() {
       link.href = 'https://aistudio.google.com/app/apikey';
     } else {
       dot.classList.add('dot--gray');
-      txt.textContent = '🎭 Rule-based dataset analysis active. Add OPENAI_API_KEY to enable LLM-powered dataset understanding.';
+      txt.textContent = '🎭 Rule-based dataset analysis active. Add GEMINI_API_KEY to enable Gemini-powered dataset understanding.';
       link.style.display = 'inline';
-      link.href = 'https://platform.openai.com/api-keys';
+      link.href = 'https://aistudio.google.com/app/apikey';
     }
 
     // Disable real-api button if not ready
@@ -670,6 +678,9 @@ async function runCustomBenchmark() {
 function renderCustomResults(data) {
   renderResultsMeta(data);
   renderDatasetAnalysisSummary(data);
+  renderEvaluationMetrics(data.evaluation_metrics);
+  renderScoringMethodology(data);
+  renderModelScoreBreakdowns(data);
   renderCustomRecommendation(data.recommendation, data.model_colors);
   renderOverallBarChart(data);
   renderRadarChart(data);
@@ -733,6 +744,148 @@ function renderDatasetAnalysisSummary(data) {
       </div>
     </div>
     <div class="dataset-summary-rationale">${analysis.rationale || data.explanation}</div>
+  `;
+}
+
+// ─── Scoring Methodology Explanation ───────────────────────────────────────────
+function renderScoringMethodology(data) {
+  const container = document.getElementById('scoring-methodology');
+  if (!container || !data.scoring_metadata) return;
+
+  const meta = data.scoring_metadata;
+  const norm = data.scoring_metadata.normalized_weights || {};
+  
+  const weightCards = Object.entries(norm).map(([cat, pct]) => `
+    <div class="weight-card">
+      <div class="weight-card__category">${cat.charAt(0).toUpperCase() + cat.slice(1)}</div>
+      <div class="weight-card__bar-wrap">
+        <div class="weight-card__bar" style="width: ${pct * 100}%"></div>
+      </div>
+      <div class="weight-card__pct">${(pct * 100).toFixed(0)}%</div>
+    </div>
+  `).join('');
+
+  const categoryExplanations = Object.entries(meta.categories_explained).map(([cat, desc]) => `
+    <div class="category-item">
+      <strong>${cat.charAt(0).toUpperCase() + cat.slice(1)}:</strong> ${desc}
+    </div>
+  `).join('');
+
+  container.innerHTML = `
+    <div class="scoring-card">
+      <div class="scoring-card__title">📊 How Scores Are Calculated</div>
+      
+      <div class="scoring-section">
+        <h4>Scoring Formula</h4>
+        <div class="formula-box">
+          <code>${meta.formula}</code>
+        </div>
+        <p class="formula-explanation">
+          Each model's final score is calculated by multiplying its raw score in each category 
+          by that category's normalized weight, then summing all contributions.
+        </p>
+      </div>
+
+      <div class="scoring-section">
+        <h4>Weights Applied (${data.datasetType || 'unclear'})</h4>
+        <p class="weight-explanation">${meta.weight_explanation}</p>
+        <div class="weights-grid">
+          ${weightCards}
+        </div>
+      </div>
+
+      <div class="scoring-section">
+        <h4>Category Definitions</h4>
+        <div class="categories-list">
+          ${categoryExplanations}
+        </div>
+      </div>
+
+      <div class="scoring-note">
+        <strong>Note:</strong> Weights are dynamically adjusted based on the dataset type, difficulty level, and format. 
+        They are then normalized so all weights sum to 100%.
+      </div>
+    </div>
+  `;
+}
+
+// ─── Model Score Breakdowns ────────────────────────────────────────────────────
+function renderModelScoreBreakdowns(data) {
+  const container = document.getElementById('model-score-breakdowns');
+  if (!container) return;
+
+  const ranking = data.ranking || [];
+  if (ranking.length === 0) {
+    container.innerHTML = '<p class="text-muted">No score breakdown data available.</p>';
+    return;
+  }
+
+  const breakdownCards = ranking.map((model) => {
+    if (!model.score_breakdown) return '';
+
+    const breakdown = model.score_breakdown;
+    const categories = ['coding', 'math', 'reasoning', 'chat'];
+    
+    const breakdownRows = categories.map(cat => {
+      const catData = breakdown[cat];
+      const barWidth = (catData.contribution / breakdown.total_contribution) * 100;
+      return `
+        <div class="breakdown-row">
+          <div class="breakdown-row__cat">${cat.charAt(0).toUpperCase() + cat.slice(1)}</div>
+          <div class="breakdown-row__calc">
+            <span class="breakdown-value">${catData.raw_score}</span>
+            <span class="breakdown-op">×</span>
+            <span class="breakdown-weight">${catData.weight_percent}%</span>
+            <span class="breakdown-op">=</span>
+            <span class="breakdown-contrib">${catData.contribution}</span>
+          </div>
+          <div class="breakdown-row__bar-wrap">
+            <div class="breakdown-row__bar" style="width: ${barWidth}%;" title="${catData.contribution}"></div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    const modelColor = data.model_colors?.[model.model] || '#6c5ce7';
+
+    return `
+      <div class="breakdown-card">
+        <div class="breakdown-card__header" style="border-left-color: ${modelColor}">
+          <div>
+            <div class="breakdown-card__rank">Rank #${model.rank}</div>
+            <div class="breakdown-card__model">${model.model}</div>
+          </div>
+          <div class="breakdown-card__score">${model.score.toFixed(1)}%</div>
+        </div>
+        
+        <div class="breakdown-details">
+          <div class="breakdown-table">
+            ${breakdownRows}
+          </div>
+          
+          <div class="breakdown-total">
+            <div class="breakdown-total__label">Final Score</div>
+            <div class="breakdown-total__sum">
+              <span>${categories.map(cat => `${breakdown[cat].contribution}`).join(' + ')}</span>
+              <span class="breakdown-total__equals">=</span>
+              <span class="breakdown-total__value">${breakdown.total_contribution}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  container.innerHTML = `
+    <div class="score-breakdowns-section">
+      <div class="section-title">🔍 Detailed Score Breakdowns</div>
+      <p class="section-description">
+        This shows exactly how each model's final score was calculated using the weighted category scores.
+      </p>
+      <div class="breakdowns-grid">
+        ${breakdownCards}
+      </div>
+    </div>
   `;
 }
 
@@ -1038,8 +1191,8 @@ function renderScoresTable(data) {
 
   models.forEach((model, idx) => {
     const color = data.model_colors[model] || '#6c5ce7';
-    const overall = data.overall_scores[model];
-    const avgTime = data.avg_response_times[model];
+    const overall = Number((data.overall_scores && data.overall_scores[model]) ?? 0);
+    const avgTime = Number((data.avg_response_times && data.avg_response_times[model]) ?? 0);
 
     html += `<tr class="table-row" style="--row-color: ${color}">
       <td class="td-model">
@@ -1061,7 +1214,7 @@ function renderScoresTable(data) {
         <span class="overall-score">${overall.toFixed(1)}%</span>
         <div class="overall-bar" style="width:${overall}%; background:${color}40; border-color:${color}"></div>
       </td>
-      <td class="td-time">${avgTime.toFixed(3)}s</td>
+      <td class="td-time">${isFinite(avgTime) ? avgTime.toFixed(3) + 's' : '—'}</td>
     </tr>`;
   });
 
@@ -1069,6 +1222,95 @@ function renderScoresTable(data) {
   container.innerHTML = html;
 }
 
+
+// ─── Evaluation Metrics ───────────────────────────────────────────────────────
+
+function renderEvaluationMetrics(metrics) {
+  const container = document.getElementById('eval-metrics-container');
+  if (!container) return;
+  if (!metrics || !metrics.models) {
+    container.innerHTML = '<p class="text-muted" style="padding:1rem">No evaluation data available.</p>';
+    return;
+  }
+
+  const { n_trials, task_type, dataset_size, models } = metrics;
+
+  // Sort models by descending mean accuracy
+  const sorted = Object.entries(models).sort((a, b) => b[1].accuracy.mean - a[1].accuracy.mean);
+
+  const CAT_ICON = { coding: '💻', math: '🧮', reasoning: '🧠', chat: '💬', unclear: '❓' };
+  const taskIcon = CAT_ICON[task_type] || '📊';
+
+  const rows = sorted.map(([name, m], idx) => {
+    const acc = m.accuracy;
+    const barWidth = Math.max(2, acc.mean);
+    const barColor = acc.mean >= 85 ? 'var(--accent-green)' : acc.mean >= 70 ? 'var(--accent-gold)' : 'var(--accent-orange)';
+    const ciSpan = acc.ci_upper - acc.ci_lower;
+
+    // Difficulty pill for each difficulty level
+    const diffPills = Object.entries(m.by_difficulty || {}).map(([d, v]) => `
+      <span class="eval-diff-pill eval-diff-pill--${d}">${d[0].toUpperCase()} ${v}%</span>
+    `).join('');
+
+    return `
+      <tr class="eval-row ${idx === 0 ? 'eval-row--top' : ''}">
+        <td class="eval-td eval-td--rank">${idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`}</td>
+        <td class="eval-td eval-td--model">
+          <span class="eval-model-name">${name}</span>
+          <div class="eval-diff-pills">${diffPills}</div>
+        </td>
+        <td class="eval-td eval-td--accuracy">
+          <div class="eval-acc-wrap">
+            <div class="eval-acc-bar-bg">
+              <div class="eval-acc-bar" style="width:${barWidth}%;background:${barColor}"></div>
+            </div>
+            <span class="eval-acc-value">${acc.mean}%</span>
+          </div>
+          <div class="eval-stat-sub">±${acc.std} std · CI [${acc.ci_lower}–${acc.ci_upper}]</div>
+        </td>
+        <td class="eval-td eval-td--f1">
+          <span class="eval-badge">${m.f1.mean}%</span>
+          <span class="eval-badge-sub">±${m.f1.std}</span>
+        </td>
+        <td class="eval-td eval-td--err">
+          <span class="eval-err ${m.error_rate > 20 ? 'eval-err--high' : ''}">${m.error_rate}%</span>
+        </td>
+        <td class="eval-td eval-td--ci">
+          <div class="eval-ci-bar-wrap" title="95% CI: ${acc.ci_lower}–${acc.ci_upper}%">
+            <div class="eval-ci-bar" style="left:${acc.ci_lower}%;width:${ciSpan}%"></div>
+          </div>
+          <span class="eval-ci-label">${acc.ci_lower}–${acc.ci_upper}%</span>
+        </td>
+      </tr>`;
+  }).join('');
+
+  container.innerHTML = `
+    <div class="eval-card">
+      <div class="eval-legend">
+        ${taskIcon} Evaluated on <strong>${dataset_size} questions</strong> (${task_type} task) ·
+        <strong>${n_trials} independent trials</strong> with fixed seeds · 95% confidence intervals shown
+      </div>
+      <div class="eval-table-wrap">
+        <table class="eval-table">
+          <thead>
+            <tr>
+              <th class="eval-th">#</th>
+              <th class="eval-th">Model</th>
+              <th class="eval-th">Accuracy (mean ± std)</th>
+              <th class="eval-th">Keyword F1</th>
+              <th class="eval-th">Error Rate</th>
+              <th class="eval-th">95% CI</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+      <div class="eval-footnote">
+        Accuracy = % of questions answered correctly · F1 = keyword recall/precision harmonic mean ·
+        CI computed via standard error over ${n_trials} trials
+      </div>
+    </div>`;
+}
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // Dataset Upload

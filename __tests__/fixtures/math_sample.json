@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "task": "math",
+    "difficulty": "easy",
+    "question": "Solve for x: 2x + 4 = 10",
+    "expected_answer": "x = 3",
+    "keywords": ["solve", "x = 3", "linear equation"]
+  },
+  {
+    "id": 2,
+    "task": "math",
+    "difficulty": "easy",
+    "question": "What is the derivative of f(x) = x^2?",
+    "expected_answer": "f'(x) = 2x",
+    "keywords": ["derivative", "2x", "calculus"]
+  },
+  {
+    "id": 3,
+    "task": "math",
+    "difficulty": "medium",
+    "question": "Calculate the probability of rolling a 6 twice in a row.",
+    "expected_answer": "1/36",
+    "keywords": ["probability", "1/36"]
+  }
+]

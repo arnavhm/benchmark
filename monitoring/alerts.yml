@@ -1,0 +1,98 @@
+groups:
+  - name: benchmark_alerts
+    interval: 30s
+    rules:
+      # Benchmark execution alerts
+      - alert: HighBenchmarkErrorRate
+        expr: rate(benchmark_errors_total[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High benchmark error rate"
+          description: "Benchmark error rate is {{ $value | humanizePercentage }} (threshold: 5%)"
+
+      - alert: BenchmarkTimeout
+        expr: benchmark_timeout_seconds > 300
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Benchmark execution timeout"
+          description: "Benchmark took {{ $value }}s (threshold: 300s)"
+
+      - alert: LowAverageScore
+        expr: avg(benchmark_final_score) < 50
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Low average benchmark score"
+          description: "Average score is {{ $value }}/100"
+
+      # Database alerts
+      - alert: DatabaseConnectionPoolExhausted
+        expr: pg_stat_activity_count > 9
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Database connection pool near exhaustion"
+          description: "Active connections: {{ $value }} (max: 10)"
+
+      - alert: DatabaseSlowQueries
+        expr: rate(pg_stat_statements_mean_time[5m]) > 1000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Slow database queries detected"
+          description: "Average query time: {{ $value }}ms"
+
+      # API/Application alerts
+      - alert: HighLatency
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High API latency"
+          description: "p95 latency: {{ $value }}s"
+
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.01
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High API error rate"
+          description: "Error rate: {{ $value | humanizePercentage }}"
+
+      # Memory alerts
+      - alert: HighMemoryUsage
+        expr: process_resident_memory_bytes / 1024 / 1024 > 512
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage"
+          description: "Memory usage: {{ $value }}MB"
+
+      # Redis alerts
+      - alert: RedisConnectionFailed
+        expr: redis_connected == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Redis connection failed"
+          description: "Cannot connect to Redis"
+
+      - alert: RedisHighMemory
+        expr: redis_memory_used_bytes / redis_memory_max_bytes > 0.9
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Redis memory usage high"
+          description: "Memory usage: {{ $value | humanizePercentage }}"

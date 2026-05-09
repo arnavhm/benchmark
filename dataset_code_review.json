@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "task": "coding",
+    "difficulty": "easy",
+    "question": "What is the bug in this code? def find_max(arr): max = arr[0] for i in range(1, len(arr)): if arr[i] > max: max = arr[i] return max",
+    "expected_answer": "No bug - the function correctly finds the maximum element.",
+    "keywords": ["code review", "bug detection", "max function", "correct logic"]
+  },
+  {
+    "id": 2,
+    "task": "coding",
+    "difficulty": "easy",
+    "question": "Identify the issue: def divide(a, b): return a / b. What's missing?",
+    "expected_answer": "Division by zero check is missing. Should add 'if b == 0: raise ValueError'",
+    "keywords": ["error handling", "edge case", "division by zero", "validation"]
+  },
+  {
+    "id": 3,
+    "task": "coding",
+    "difficulty": "medium",
+    "question": "Review this code for bugs: def remove_duplicates(lst): for i in range(len(lst)): for j in range(i+1, len(lst)): if lst[i] == lst[j]: lst.pop(j). What's wrong?",
+    "expected_answer": "Modifying list while iterating causes index issues. Should create new list or use set.",
+    "keywords": ["list modification", "iteration bug", "index out of bounds", "logic error"]
+  },
+  {
+    "id": 4,
+    "task": "coding",
+    "difficulty": "medium",
+    "question": "What does this decorator do? def memoize(func): cache = {} def wrapper(*args): if args not in cache: cache[args] = func(*args) return cache[args] return wrapper",
+    "expected_answer": "It's a memoization decorator that caches function results to avoid recalculation.",
+    "keywords": ["decorator", "memoization", "caching", "performance optimization"]
+  },
+  {
+    "id": 5,
+    "task": "coding",
+    "difficulty": "medium",
+    "question": "Identify the performance issue: def is_palindrome(s): return s == s[::-1]. Is this optimal for large strings?",
+    "expected_answer": "It works correctly but creates a reversed copy. Better to compare chars from ends.",
+    "keywords": ["performance", "string reversal", "space complexity", "optimization"]
+  },
+  {
+    "id": 6,
+    "task": "coding",
+    "difficulty": "hard",
+    "question": "What's the issue with this thread-safe singleton? class Singleton: _instance = None def __init__(self): if not Singleton._instance: Singleton._instance = self",
+    "expected_answer": "Not thread-safe - race condition. Multiple threads can create instances simultaneously.",
+    "keywords": ["threading", "race condition", "singleton pattern", "synchronization"]
+  },
+  {
+    "id": 7,
+    "task": "coding",
+    "difficulty": "hard",
+    "question": "Review async code: async def fetch_users(): users = await get_users() return [process(u) for u in users]. Is it efficient?",
+    "expected_answer": "No - processing is synchronous/blocking. Should use 'gather' to run async operations concurrently.",
+    "keywords": ["async/await", "concurrency", "performance", "gathering tasks"]
+  },
+  {
+    "id": 8,
+    "task": "coding",
+    "difficulty": "hard",
+    "question": "Identify the memory leak: def create_handlers(): handlers = []; def handler(x): handlers.append(x); return handler",
+    "expected_answer": "The closure captures 'handlers' list. Each handler holds reference, preventing garbage collection.",
+    "keywords": ["closure", "memory leak", "garbage collection", "reference counting"]
+  },
+  {
+    "id": 9,
+    "task": "reasoning",
+    "difficulty": "medium",
+    "question": "This code tries to implement binary search. Is the implementation correct? def binary_search(arr, target): left, right = 0, len(arr)-1; while left <= right: mid = (left + right) // 2; if arr[mid] == target: return mid; elif arr[mid] < target: left = mid + 1; else: right = mid - 1; return -1",
+    "expected_answer": "Yes, the implementation is correct. It properly handles all cases and terminates correctly.",
+    "keywords": ["binary search", "algorithm", "correctness", "complexity O(log n)"]
+  },
+  {
+    "id": 10,
+    "task": "reasoning",
+    "difficulty": "hard",
+    "question": "What design pattern is this? class Logger: _instance = None def __new__(cls): if cls._instance is None: cls._instance = super().__new__(cls); return cls._instance",
+    "expected_answer": "Singleton pattern using __new__. Thread-safe approach to ensure only one instance exists.",
+    "keywords": ["design pattern", "singleton", "thread-safe", "__new__ method"]
+  },
+  {
+    "id": 11,
+    "task": "reasoning",
+    "difficulty": "hard",
+    "question": "Explain the complexity: A function uses nested loops - outer O(n), inner does binary search O(log n). What's overall complexity?",
+    "expected_answer": "O(n log n) - multiply the complexities since binary search is called n times.",
+    "keywords": ["time complexity", "Big O notation", "algorithm analysis", "O(n log n)"]
+  },
+  {
+    "id": 12,
+    "task": "reasoning",
+    "difficulty": "hard",
+    "question": "A developer wants to refactor callback hell in Node.js. What are 3 recommended approaches?",
+    "expected_answer": "1) Promises 2) Async/await 3) Promise chains or event emitters",
+    "keywords": ["callback hell", "promises", "async/await", "refactoring"]
+  },
+  {
+    "id": 13,
+    "task": "chat",
+    "difficulty": "medium",
+    "question": "Can you explain the difference between var, let, and const in JavaScript in a clear, beginner-friendly way?",
+    "expected_answer": "var: function-scoped, can be redeclared; let: block-scoped, cannot be redeclared; const: block-scoped, immutable",
+    "keywords": ["JavaScript", "scope", "variable declaration", "explanation"]
+  },
+  {
+    "id": 14,
+    "task": "chat",
+    "difficulty": "hard",
+    "question": "Explain how the event loop works in JavaScript, including the call stack, callback queue, and microtask queue.",
+    "expected_answer": "Call stack runs synchronous code; async operations go to task queue; microtasks (Promises) execute after stack empties but before next task.",
+    "keywords": ["event loop", "async", "call stack", "callback queue", "microtask"]
+  },
+  {
+    "id": 15,
+    "task": "chat",
+    "difficulty": "hard",
+    "question": "What are the trade-offs between SQL and NoSQL databases? Give pros and cons of each.",
+    "expected_answer": "SQL: structured, ACID, good for complex queries, less scalable. NoSQL: flexible, scalable, no transactions, good for unstructured data.",
+    "keywords": ["database", "SQL", "NoSQL", "trade-offs", "comparison"]
+  }
+]

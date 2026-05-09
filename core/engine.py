@@ -1,175 +1,382 @@
 """
-LLM Scoring Engine
+LLM Scoring Engine (Production-Grade)
 
-This module calculates comprehensive LLM performance scores based on
-accuracy, latency, and cost metrics.
+This module calculates comprehensive LLM performance scores using a weighted formula
+based on Accuracy, Latency, and Cost. Includes database persistence, validation,
+and structured logging for production use.
+
+Formula: S_final = (w_a * A) + (w_l * L) + (w_c * C)
+where:
+  - A: Accuracy (0-100)
+  - L: Normalized Latency (0-100, higher is faster)
+  - C: Normalized Cost (0-100, lower cost = higher score)
+  - w_a=0.5, w_l=0.3, w_c=0.2 (weights)
 """
 
-from dataclasses import dataclass
-from typing import Dict, List, Optional, Tuple
 import json
+import random
+import os
+import asyncio
+import time
+from typing import Dict, List, Tuple, Optional
+from datetime import datetime
+
+from sqlalchemy.orm import Session
+
+from core.config import settings
+from core.database import SessionLocal, Model, BenchmarkResult
+from core.logger import get_logger
+from core.validators import BenchmarkResultCreate, TierEnum
+
+logger = get_logger(__name__)
+
+# Optional: for real API calls
+# import aiohttp
 
 
-@dataclass
-class Metrics:
-    """Data class for LLM performance metrics."""
+class BenchmarkEngine:
+    """Production-grade LLM benchmark scoring engine."""
 
-    accuracy: float  # 0-100
-    latency: float  # milliseconds
-    cost: float  # dollars per 1K tokens
+    # Scoring weights
+    WEIGHT_ACCURACY = 0.5
+    WEIGHT_LATENCY = 0.3
+    WEIGHT_COST = 0.2
 
+    # Normalization thresholds
+    LATENCY_MAX_MS = 5000.0  # 5 seconds in milliseconds
+    COST_MAX_USD = 0.10  # $0.10 per call
 
-class ScoringEngine:
-    """Calculates LLM performance scores based on multiple metrics."""
+    # Tier boundaries
+    TIER_PRODUCTION_MIN = 85.0
+    TIER_ANALYSIS_MIN = 70.0
 
-    # Weighting factors for metrics (should sum to 1.0)
-    DEFAULT_WEIGHTS = {"accuracy": 0.5, "latency": 0.3, "cost": 0.2}
+    def normalize_accuracy(self, accuracy: float) -> float:
+        """Normalize accuracy to 0-100 scale."""
+        if not (0 <= accuracy <= 100):
+            raise ValueError("Accuracy must be between 0 and 100")
+        return accuracy
 
-    # Benchmark ranges for normalization
-    BENCHMARK_RANGES = {
-        "accuracy": {"min": 50, "max": 100},  # 50-100%
-        "latency": {"min": 100, "max": 5000},  # 100-5000ms
-        "cost": {"min": 0.001, "max": 0.05},  # $0.001-$0.05 per 1K tokens
-    }
+    def normalize_latency(self, latency: float) -> float:
+        """Normalize latency to 0-100 scale (higher is better)."""
+        if latency < 0:
+            raise ValueError("Latency cannot be negative")
+        # Convert to 0-100 where 0ms = 100 and 5000ms = 0
+        normalized = max(0, 100 * (1 - (latency / self.LATENCY_MAX_MS)))
+        return round(normalized, 2)
 
-    def __init__(
-        self, weights: Optional[Dict[str, float]] = None, normalize: bool = True
-    ):
+    def normalize_cost(self, cost: float) -> float:
+        """Normalize cost to 0-100 scale (higher is better)."""
+        if cost < 0:
+            raise ValueError("Cost cannot be negative")
+        # Convert to 0-100 where $0 = 100 and $0.10 = 0
+        normalized = max(0, 100 * (1 - (cost / self.COST_MAX_USD)))
+        return round(normalized, 2)
+
+    def calculate_score(self, accuracy: float, latency: float, cost: float) -> float:
         """
-        Initialize the scoring engine.
+        Calculate the final LLM benchmark score using weighted formula.
 
         Args:
-            weights: Custom weighting for metrics (default: equal emphasis)
-            normalize: Whether to normalize scores to 0-100 range
-        """
-        self.weights = weights or self.DEFAULT_WEIGHTS
-        self.normalize = normalize
-
-        # Validate weights
-        if abs(sum(self.weights.values()) - 1.0) > 0.01:
-            raise ValueError("Weights must sum to approximately 1.0")
-
-    def normalize_metric(self, metric: str, value: float) -> float:
-        """
-        Normalize a metric to 0-100 scale.
-
-        Args:
-            metric: Metric name (accuracy, latency, cost)
-            value: Metric value
-
-        Returns:
-            Normalized value (0-100)
-        """
-        if metric not in self.BENCHMARK_RANGES:
-            return value
-
-        benchmark = self.BENCHMARK_RANGES[metric]
-        min_val = benchmark["min"]
-        max_val = benchmark["max"]
-
-        # Clamp value within range
-        value = max(min_val, min(max_val, value))
-
-        if metric == "accuracy":
-            # For accuracy, higher is better
-            normalized = ((value - min_val) / (max_val - min_val)) * 100
-        else:
-            # For latency and cost, lower is better (invert)
-            normalized = ((max_val - value) / (max_val - min_val)) * 100
-
-        return max(0, min(100, normalized))
-
-    def calculate_score(
-        self, accuracy: float, latency: float, cost: float
-    ) -> float:
-        """
-        Calculate composite LLM score.
-
-        Args:
-            accuracy: Accuracy percentage (0-100)
+            accuracy: Semantic similarity score (0-100)
             latency: Response time in milliseconds
-            cost: Cost per 1K tokens in dollars
+            cost: Cost per API call in dollars
 
         Returns:
-            Composite score (0-100)
+            Final score normalized to 0-100 scale
         """
-        # Normalize individual metrics
-        norm_accuracy = (
-            self.normalize_metric("accuracy", accuracy) if self.normalize else accuracy
-        )
-        norm_latency = (
-            self.normalize_metric("latency", latency) if self.normalize else latency
-        )
-        norm_cost = (
-            self.normalize_metric("cost", cost) if self.normalize else cost
+        # Validate inputs
+        accuracy_norm = self.normalize_accuracy(accuracy)
+        latency_norm = self.normalize_latency(latency)
+        cost_norm = self.normalize_cost(cost)
+
+        # Calculate weighted final score
+        final_score = (
+            (accuracy_norm * self.WEIGHT_ACCURACY)
+            + (latency_norm * self.WEIGHT_LATENCY)
+            + (cost_norm * self.WEIGHT_COST)
         )
 
-        # Calculate weighted composite score
-        score = (
-            norm_accuracy * self.weights["accuracy"]
-            + norm_latency * self.weights["latency"]
-            + norm_cost * self.weights["cost"]
-        )
+        return round(final_score, 2)
 
-        return round(score, 2)
-
-    def calculate_scores(
-        self, models: List[Dict[str, float]]
-    ) -> List[Dict[str, float]]:
+    def determine_tier(self, score: float) -> TierEnum:
         """
-        Calculate scores for multiple models.
+        Determine deployment tier based on final score.
+
+        Tier Breakdown:
+        - Production Tier: score > 85 (Ready for real-time customer use)
+        - Analysis Tier: 70 < score <= 85 (Better for offline/batch processing)
+        - Research Tier: score <= 70 (Needs more fine-tuning)
 
         Args:
-            models: List of dicts with 'name', 'accuracy', 'latency', 'cost'
+            score: Final benchmark score (0-100)
 
         Returns:
-            List of dicts with model scores
+            Deployment tier enum
         """
-        results = []
-        for model in models:
-            score = self.calculate_score(
-                model["accuracy"], model["latency"], model["cost"]
-            )
-            results.append({**model, "score": score})
+        if score > self.TIER_PRODUCTION_MIN:
+            return TierEnum.PRODUCTION
+        elif score > self.TIER_ANALYSIS_MIN:
+            return TierEnum.ANALYSIS
+        else:
+            return TierEnum.RESEARCH
 
-        # Sort by score (descending)
-        results.sort(key=lambda x: x["score"], reverse=True)
+    async def fetch_llm_response(
+        self, model_name: str, prompt: Optional[str] = None
+    ) -> Tuple[float, float, float]:
+        """
+        Simulate or fetch LLM response metrics asynchronously.
+
+        In production, replace with actual API calls using aiohttp.
+
+        Args:
+            model_name: Name of the LLM model to benchmark
+            prompt: Optional prompt to send to the model
+
+        Returns:
+            Tuple of (accuracy, latency_ms, cost_usd)
+        """
+        # Simulate API call with realistic delays
+        await asyncio.sleep(random.uniform(0.1, 0.5))
+
+        # Simulated metrics (replace with actual API response parsing)
+        accuracy = round(random.uniform(70.0, 95.0), 2)
+        latency = round(random.uniform(100.0, 3000.0), 2)  # milliseconds
+        cost = round(random.uniform(0.001, 0.01), 4)  # dollars
+
+        logger.info(
+            "benchmark_fetched",
+            model_name=model_name,
+            accuracy=accuracy,
+            latency=latency,
+            cost=cost,
+        )
+
+        return accuracy, latency, cost
+
+    async def run_benchmark_async(
+        self, models: Optional[List[str]] = None, dataset_id: Optional[int] = None
+    ) -> List[Dict]:
+        """
+        Run benchmark on multiple LLM models in parallel using asyncio.
+
+        Args:
+            models: List of model names to benchmark
+            dataset_id: Optional dataset ID for tracking
+
+        Returns:
+            List of benchmark results
+        """
+        if models is None:
+            models = ["GPT-4o", "Claude-3.5", "Llama-3"]
+
+        logger.info("benchmark_started", model_count=len(models), dataset_id=dataset_id)
+
+        # Create concurrent tasks for all models
+        tasks = [self.fetch_llm_response(model) for model in models]
+
+        # Execute all tasks concurrently
+        start_time = time.time()
+        responses = await asyncio.gather(*tasks, return_exceptions=True)
+        total_time = time.time() - start_time
+
+        # Compile results with error handling
+        results = []
+        for model, response in zip(models, responses):
+            if isinstance(response, Exception):
+                logger.error("benchmark_failed", model_name=model, error=str(response))
+                continue
+
+            accuracy, latency, cost = response
+
+            try:
+                score = self.calculate_score(accuracy, latency, cost)
+                tier = self.determine_tier(score)
+
+                results.append(
+                    {
+                        "model": model,
+                        "accuracy": accuracy,
+                        "latency": latency,
+                        "cost": cost,
+                        "final_score": score,
+                        "tier": tier.value,
+                        "execution_time": total_time / len(models),
+                        "status": "success",
+                    }
+                )
+            except ValueError as e:
+                logger.warning(
+                    "benchmark_validation_error", model_name=model, error=str(e)
+                )
+
+        logger.info(
+            "benchmark_completed",
+            model_count=len(results),
+            total_time=round(total_time, 2),
+            speedup=round(sum(r["latency"] for r in results) / total_time, 2)
+            if results
+            else 0,
+        )
+
         return results
 
-    def generate_report(self, models: List[Dict[str, float]]) -> str:
+    def save_results_to_database(
+        self, results: List[Dict], db: Session, dataset_id: Optional[int] = None
+    ) -> int:
         """
-        Generate a formatted performance report.
+        Save benchmark results to database.
 
         Args:
-            models: List of model metrics
+            results: List of benchmark results
+            db: Database session
+            dataset_id: Optional dataset ID
 
         Returns:
-            Formatted report string
+            Number of results saved
         """
-        scored_models = self.calculate_scores(models)
+        saved_count = 0
 
-        report = "LLM Benchmark Results\n"
-        report += "=" * 60 + "\n\n"
+        for result in results:
+            try:
+                # Create and validate result using Pydantic
+                validated_result = BenchmarkResultCreate(
+                    model_name=result["model"],
+                    accuracy=result["accuracy"],
+                    latency=result["latency"],
+                    cost=result["cost"],
+                    accuracy_norm=self.normalize_accuracy(result["accuracy"]),
+                    latency_norm=self.normalize_latency(result["latency"]),
+                    cost_norm=self.normalize_cost(result["cost"]),
+                    final_score=result["final_score"],
+                    tier=result["tier"],
+                    execution_time=result["execution_time"],
+                    dataset_id=dataset_id,
+                    status=result.get("status", "success"),
+                )
 
-        for idx, model in enumerate(scored_models, 1):
-            report += f"{idx}. {model['name']}\n"
-            report += f"   Accuracy:  {model['accuracy']:.1f}%\n"
-            report += f"   Latency:   {model['latency']:.0f}ms\n"
-            report += f"   Cost:      ${model['cost']:.4f}\n"
-            report += f"   Score:     {model['score']:.2f}/100\n\n"
+                # Create database record
+                db_result = BenchmarkResult(
+                    model_name=validated_result.model_name,
+                    dataset_id=dataset_id,
+                    accuracy=validated_result.accuracy,
+                    latency=validated_result.latency,
+                    cost=validated_result.cost,
+                    accuracy_norm=validated_result.accuracy_norm,
+                    latency_norm=validated_result.latency_norm,
+                    cost_norm=validated_result.cost_norm,
+                    final_score=validated_result.final_score,
+                    tier=validated_result.tier,
+                    execution_time=validated_result.execution_time,
+                    status=validated_result.status,
+                )
 
-        return report
+                db.add(db_result)
+                saved_count += 1
+
+            except Exception as e:
+                logger.error(
+                    "result_save_failed", model_name=result.get("model"), error=str(e)
+                )
+
+        try:
+            db.commit()
+            logger.info("benchmark_results_saved", count=saved_count)
+        except Exception as e:
+            db.rollback()
+            logger.error("commit_failed", error=str(e))
+            saved_count = 0
+
+        return saved_count
+
+    def save_results_to_json(
+        self, results: List[Dict], output_path: str = "data/results.json"
+    ) -> bool:
+        """
+        Save benchmark results to JSON file (fallback).
+
+        Args:
+            results: List of benchmark results
+            output_path: Path to save JSON file
+
+        Returns:
+            True if successful, False otherwise
+        """
+        try:
+            os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
+            with open(output_path, "w") as f:
+                json.dump(results, f, indent=2)
+
+            logger.info("results_saved_json", path=output_path)
+            return True
+        except Exception as e:
+            logger.error("json_save_failed", error=str(e))
+            return False
+
+    def run_benchmark(
+        self,
+        models: Optional[List[str]] = None,
+        dataset_id: Optional[int] = None,
+        save_to_db: bool = True,
+    ) -> List[Dict]:
+        """
+        Synchronous wrapper to run async benchmark.
+
+        Args:
+            models: List of model names to benchmark
+            dataset_id: Optional dataset ID
+            save_to_db: Whether to save results to database
+
+        Returns:
+            List of benchmark results
+        """
+        # Run async benchmark
+        results = asyncio.run(self.run_benchmark_async(models, dataset_id))
+
+        # Save to database if requested and configured
+        if save_to_db and settings.database.url != "sqlite:///:memory:":
+            try:
+                db = SessionLocal()
+                self.save_results_to_database(results, db, dataset_id)
+                db.close()
+            except Exception as e:
+                logger.warning("database_save_failed", error=str(e))
+
+        # Always save to JSON for compatibility
+        self.save_results_to_json(results)
+
+        # Print results table
+        self._print_results_table(results)
+
+        return results
+
+    def _print_results_table(self, results: List[Dict]):
+        """Print benchmark results in formatted table."""
+        print("\n" + "=" * 80)
+        print("LLM BENCHMARK RESULTS")
+        print("=" * 80)
+
+        for r in results:
+            print(f"\n{r['model']}")
+            print(f"  Accuracy:         {r['accuracy']:.2f}%")
+            print(f"  Latency:          {r['latency']:.2f}ms")
+            print(f"  Cost:             ${r['cost']:.6f}")
+            print(f"  Final Score:      {r['final_score']:.2f}/100")
+            print(f"  Deployment Tier:  {r['tier']}")
+
+        print("\n" + "=" * 80)
+        print("Results saved to data/results.json")
+        print("=" * 80 + "\n")
+
+
+def create_engine() -> BenchmarkEngine:
+    """Factory function to create benchmark engine."""
+    return BenchmarkEngine()
 
 
 if __name__ == "__main__":
-    # Example usage
-    engine = ScoringEngine()
+    # Initialize engine and run benchmark
+    engine = create_engine()
 
-    test_models = [
-        {"name": "GPT-4", "accuracy": 92, "latency": 850, "cost": 0.03},
-        {"name": "Claude 3", "accuracy": 90, "latency": 720, "cost": 0.025},
-        {"name": "Llama 2", "accuracy": 78, "latency": 450, "cost": 0.005},
-    ]
-
-    scores = engine.calculate_scores(test_models)
-    print(engine.generate_report(test_models))
+    # Run benchmark with default models
+    engine.run_benchmark()

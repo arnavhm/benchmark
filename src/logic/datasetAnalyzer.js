@@ -85,7 +85,7 @@ async function analyzeDataset(records, options = {}) {
           size: records.length,
           reasoning_required: llmResult.reasoning_required,
           confidence: Math.max(0, Math.min(1, Number(llmResult.confidence))),
-          analyzer: "llm",
+          analyzer: "gemini",
           rationale: llmResult.rationale
         };
       }

@@ -5,6 +5,12 @@ const { SCORE_CATEGORIES, generateRankingInsights, getRankedModels } = require("
 const { parseDatasetFile, getDatasetSamples } = require("../logic/datasetParser");
 const { analyzeDataset } = require("../logic/datasetAnalyzer");
 const { recommendModelsForDataset, toCustomResultsPayload } = require("../logic/datasetRecommendationEngine");
+const { runTrials } = require("../logic/datasetEvaluator");
+
+function hasGeminiKey() {
+  const key = process.env.GEMINI_API_KEY;
+  return Boolean(key && key !== "your_gemini_api_key_here");
+}
 
 const router = express.Router();
 const upload = multer({
@@ -144,13 +150,15 @@ router.post("/api/datasets/analyze", upload.single("file"), async (req, res, nex
     });
     const modelPayload = await getModels(req.body?.source || "local");
     const recommendation = recommendModelsForDataset(modelPayload.models, analysis);
+    const evaluation_metrics = runTrials(recommendation.allRankings, records, analysis.type);
 
     res.json({
       ...toCustomResultsPayload(recommendation, analysis, {
         source: modelPayload.source,
         lastUpdated: modelPayload.lastUpdated
       }),
-      samples: getDatasetSamples(records, 10)
+      samples: getDatasetSamples(records, 10),
+      evaluation_metrics
     });
   } catch (error) {
     next(error);
@@ -174,6 +182,7 @@ router.post("/upload-custom-dataset", upload.single("file"), async (req, res, ne
     });
     const modelPayload = await getModels("local");
     const recommendation = recommendModelsForDataset(modelPayload.models, analysis);
+    const evaluation_metrics = runTrials(recommendation.allRankings, records, analysis.type);
 
     res.json({
       message: `Analyzed ${records.length} samples successfully.`,
@@ -184,7 +193,8 @@ router.post("/upload-custom-dataset", upload.single("file"), async (req, res, ne
         source: modelPayload.source,
         lastUpdated: modelPayload.lastUpdated
       }),
-      samples: getDatasetSamples(records, 10)
+      samples: getDatasetSamples(records, 10),
+      evaluation_metrics
     });
   } catch (error) {
     next(error);
@@ -193,12 +203,85 @@ router.post("/upload-custom-dataset", upload.single("file"), async (req, res, ne
 
 router.get("/api-status", (req, res) => {
   res.json({
-    gemini_sdk_installed: false,
-    gemini_api_key_set: false,
-    gemini_ready: false,
-    llm_dataset_analyzer: Boolean(process.env.OPENAI_API_KEY),
-    dataset_analyzer_model: process.env.DATASET_ANALYZER_MODEL || "gpt-5.4-mini"
+    gemini_sdk_installed: hasGeminiKey(),
+    gemini_api_key_set: hasGeminiKey(),
+    gemini_ready: hasGeminiKey(),
+    llm_dataset_analyzer: hasGeminiKey(),
+    dataset_analyzer_model: process.env.DATASET_ANALYZER_MODEL || "gemini-2.5-flash"
   });
+});
+
+// =============================================================
+// Run Custom Benchmark (used by frontend Run Custom Benchmark)
+// Accepts JSON body: { mode, difficulty, categories }
+// Returns a recommendation payload (same shape used by the UI)
+// =============================================================
+router.post('/run-custom-benchmark', async (req, res, next) => {
+  try {
+    const { mode = 'simulated', difficulty = 'all', categories = null } = req.body || {};
+
+    // Use local models and generate a ranked list with default weights
+    const payload = await getModels('local');
+
+    // Heuristic: if categories provided, bias weights toward selected categories
+    const baseWeights = { coding: 25, math: 25, reasoning: 25, chat: 25 };
+    if (Array.isArray(categories) && categories.length > 0) {
+      // boost selected categories
+      const boost = Math.floor(100 / categories.length / 2);
+      categories.forEach(cat => {
+        if (baseWeights[cat] !== undefined) baseWeights[cat] = Math.min(80, baseWeights[cat] + boost);
+      });
+    }
+
+    const ranked = getRankedModels(payload.models, baseWeights, { sortBy: 'score', filterCategory: 'all' });
+
+    const recommendationPayload = buildRecommendationPayload({
+      ranked,
+      source: payload.source,
+      lastUpdated: payload.lastUpdated,
+      weights: baseWeights,
+    });
+
+    // Build UI-friendly aggregates the frontend expects
+    const models = ranked.map(r => r.model);
+    const overall_scores = ranked.reduce((acc, r) => { acc[r.model] = r.weighted_score || r.finalScore || r.score || 0; return acc; }, {});
+    const category_scores = {
+      coding: {}, math: {}, reasoning: {}, chat: {}
+    };
+    ranked.forEach(r => {
+      category_scores.coding[r.model] = Number(r.coding || 0);
+      category_scores.math[r.model] = Number(r.math || 0);
+      category_scores.reasoning[r.model] = Number(r.reasoning || 0);
+      category_scores.chat[r.model] = Number(r.chat || 0);
+    });
+
+    const recommendation = {
+      recommended_model: recommendationPayload.best_model,
+      score: overall_scores[recommendationPayload.best_model] || 0,
+      explanation: recommendationPayload.explanation,
+      rankings: ranked.map((r, i) => ({ model: r.model, overall: overall_scores[r.model], color: '#6c5ce7' }))
+    };
+
+    // model_colors: minimal fallback mapping
+    const model_colors = models.reduce((m, name, i) => { m[name] = ['#00cec9','#d4a574','#4285f4','#6c5ce7'][i % 4]; return m; }, {});
+
+    const resp = Object.assign({}, recommendationPayload, {
+      mode: mode === 'real_api' ? 'real_api' : (mode === 'llm' ? 'llm' : 'simulated'),
+      difficulty_filter: difficulty,
+      categories: categories || ['coding','math','reasoning','chat'],
+      gemini_api_used: false,
+      models,
+      overall_scores,
+      category_scores,
+      recommendation,
+      model_colors,
+      weights: baseWeights,
+    });
+
+    res.json(resp);
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = router;

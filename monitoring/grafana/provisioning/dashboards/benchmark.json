@@ -1,0 +1,86 @@
+{
+  "dashboard": {
+    "title": "LLM Benchmark Monitoring",
+    "tags": ["benchmark", "llm", "performance"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "title": "Benchmark Execution Status",
+        "type": "stat",
+        "gridPos": {"x": 0, "y": 0, "w": 6, "h": 4},
+        "targets": [
+          {
+            "expr": "rate(benchmark_requests_total[5m])",
+            "legendFormat": "Benchmarks/sec"
+          }
+        ]
+      },
+      {
+        "title": "Average Final Score",
+        "type": "stat",
+        "gridPos": {"x": 6, "y": 0, "w": 6, "h": 4},
+        "targets": [
+          {
+            "expr": "avg(benchmark_final_score)",
+            "legendFormat": "Avg Score"
+          }
+        ]
+      },
+      {
+        "title": "Error Rate",
+        "type": "stat",
+        "gridPos": {"x": 12, "y": 0, "w": 6, "h": 4},
+        "targets": [
+          {
+            "expr": "rate(benchmark_errors_total[5m])",
+            "legendFormat": "Error Rate"
+          }
+        ]
+      },
+      {
+        "title": "Score Distribution",
+        "type": "histogram",
+        "gridPos": {"x": 0, "y": 4, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "benchmark_final_score",
+            "legendFormat": "{{ model }}"
+          }
+        ]
+      },
+      {
+        "title": "Model Tier Distribution",
+        "type": "piechart",
+        "gridPos": {"x": 12, "y": 4, "w": 6, "h": 8},
+        "targets": [
+          {
+            "expr": "count by (tier) (benchmark_final_score > 85)",
+            "legendFormat": "{{ tier }}"
+          }
+        ]
+      },
+      {
+        "title": "API Response Time (p95)",
+        "type": "graph",
+        "gridPos": {"x": 0, "y": 12, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))",
+            "legendFormat": "{{ path }}"
+          }
+        ]
+      },
+      {
+        "title": "Database Query Performance",
+        "type": "graph",
+        "gridPos": {"x": 12, "y": 12, "w": 6, "h": 8},
+        "targets": [
+          {
+            "expr": "rate(pg_stat_statements_calls[5m])",
+            "legendFormat": "Queries/sec"
+          }
+        ]
+      }
+    ]
+  }
+}
