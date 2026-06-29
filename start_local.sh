@@ -9,12 +9,16 @@ lsof -ti :5002 | xargs kill -9 2>/dev/null
 lsof -ti :8000 | xargs kill -9 2>/dev/null
 
 echo "🚀 Starting Node.js Web Dashboard on http://127.0.0.1:5002..."
-node web/server.js > logs/node_server.log 2>&1 &
+cd frontend
+node web/server.js > ../logs/node_server.log 2>&1 &
 NODE_PID=$!
+cd ..
 
 echo "🚀 Starting FastAPI Backend on http://127.0.0.1:8000..."
-PYTHONPATH=. .venv/bin/python -m uvicorn api:app --port 8000 > logs/fastapi_server.log 2>&1 &
+cd backend
+PYTHONPATH=. .venv/bin/python -m uvicorn api:app --port 8000 > ../logs/fastapi_server.log 2>&1 &
 API_PID=$!
+cd ..
 
 # Wait briefly to confirm start
 sleep 2

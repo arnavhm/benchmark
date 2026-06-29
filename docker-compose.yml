@@ -38,7 +38,7 @@ services:
   # Application Backend
   app:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
       target: development
     container_name: benchmark_app
@@ -51,7 +51,7 @@ services:
     ports:
       - "5002:5002"
     volumes:
-      - .:/app
+      - ./backend:/app
     depends_on:
       postgres:
         condition: service_healthy
