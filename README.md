@@ -20,26 +20,21 @@ A comprehensive benchmarking framework for evaluating Large Language Model (LLM)
 
 ```
 benchmark/
-├── core/                      # Python modules
-│   ├── generator.py          # Synthetic dataset generator
-│   ├── engine.py             # LLM scoring & benchmarking engine
-│   └── __pycache__/
-├── web/                       # Web interface
-│   ├── app.js                # Dashboard data loading
-│   ├── server.js             # Backend server (Node.js)
-│   ├── static/
-│   │   ├── script.js         # Frontend logic
-│   │   └── style.css         # Styling
-│   └── templates/
-│       └── index.html        # Main dashboard UI
-├── data/                      # Data storage
-│   ├── results/              # Benchmark results
-│   ├── synthetic_input.json  # Generated synthetic dataset
-│   └── results.json          # Latest benchmark results
-├── scripts/                   # Utility scripts
-├── .gitignore                # Git ignore rules
-├── setup_project.sh          # Project initialization script
-└── README.md                 # This file
+├── backend/                   # Python FastAPI Backend & Engine
+│   ├── api.py                 # Backend API entrypoint
+│   ├── core/                  # Engine, DB schema, NLP Evaluators
+│   ├── tests/                 # Pytest test suites
+│   └── requirements.txt       # Python dependencies
+├── frontend/                  # Node.js Dashboard & Logic
+│   ├── web/                   # Express server & static UI files
+│   ├── src/                   # JS logic (Rankings, Recommendation)
+│   └── package.json           # Node dependencies
+├── datasets/                  # Domain-specific datasets (Aviation, Finance)
+├── docs/                      # Generated reports and analysis documents
+├── scripts/                   # Setup scripts and Pandas ETL pipeline
+├── docker-compose.yml         # Container orchestration
+├── start_local.sh             # Universal launch script
+└── README.md                  # This file
 ```
 
 ---
@@ -48,12 +43,14 @@ benchmark/
 
 ✨ **Core Features:**
 
-- 🧠 **Synthetic Data Generation**: Domain-aware dataset creation (Finance, Aviation, General Knowledge)
-- ⚡ **Parallel Benchmarking**: Concurrent LLM evaluation using `asyncio`
-- 📊 **Multi-Metric Scoring**: Accuracy, Latency, and Cost normalization
-- 🎯 **Deployment Tier Classification**: Production, Analysis, Research tiers
-- 📈 **Interactive Dashboard**: Real-time results visualization
-- 🔌 **API Integration Ready**: Placeholder for real LLM API calls (OpenAI, Anthropic, etc.)
+- 🧠 **NLP Semantic Evaluation**: Validates outputs using `scikit-learn` TF-IDF vectorization and Cosine Similarity, ensuring high-fidelity semantic comparisons.
+- 📐 **Statistical Rigor**: Computes Welch's t-test for statistical significance (p-values) and extracts tail latency telemetry (p95/p99 bounds).
+- ⚙️ **Data Engineering ETL**: Full `pandas` data pipeline to extract, cleanse (drop nulls), join, aggregate, and load raw telemetry logs into the database via ORM.
+- 🛩️ **Domain-Specific Benchmarking**: Evaluates models against hyper-specific enterprise datasets, such as Aviation Maintenance Fault diagnostics.
+- ⚡ **Parallel Execution**: Concurrent LLM evaluation using Python `asyncio`.
+- 📊 **Multi-Metric Scoring**: Accuracy, Latency, and Cost normalization with weighted distributions.
+- 🎯 **Deployment Tiering**: Automatic classification into Production, Analysis, and Research tiers.
+- 🏗️ **Monorepo Architecture**: Clean separation of Python backend and Node.js frontend, fully containerized via Docker.
 
 ---
 
@@ -95,6 +92,7 @@ Follow these three steps to generate and benchmark your LLM models:
 ### Step 1: Generate Synthetic Data
 
 ```bash
+cd backend
 python3 core/generator.py
 ```
 
@@ -120,6 +118,7 @@ python3 core/generator.py
 ### Step 2: Run Benchmark Engine
 
 ```bash
+cd backend
 python3 core/engine.py
 ```
 
@@ -165,10 +164,10 @@ Results saved to data/results.json
 ### Step 3: View Dashboard
 
 ```bash
-# Start the web server
-node web/server.js
+# Start the entire environment (Backend + Frontend)
+./start_local.sh
 
-# Open browser to http://localhost:3000
+# Open browser to http://127.0.0.1:5002
 ```
 
 The dashboard automatically loads `data/results.json` and displays:
@@ -897,5 +896,4 @@ For issues or questions:
 
 ---
 
-**Last Updated:** May 8, 2026  
-**Status:** Production Ready ✅
+**Last Updated:** June 29, 2026
