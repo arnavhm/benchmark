@@ -50,18 +50,18 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r backend/requirements.txt
 
       - name: Lint with flake8
         run: |
-          flake8 core src tests --count --select=E9,F63,F7,F82 --show-source --statistics
-          flake8 core src tests --count --exit-zero --max-complexity=10 --max-line-length=100 --statistics
+          flake8 backend/core backend/tests --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 backend/core backend/tests --count --exit-zero --max-complexity=10 --max-line-length=100 --statistics
 
       - name: Format check with black
-        run: black --check core src tests
+        run: black --check backend/core backend/tests
 
       - name: Type check with mypy
-        run: mypy core src --ignore-missing-imports || true
+        run: mypy backend/core --ignore-missing-imports || true
 
       - name: Run pytest
         env:
@@ -69,7 +69,7 @@ jobs:
           CACHE_URL: redis://localhost:6379/0
           ENVIRONMENT: testing
         run: |
-          pytest tests/ -v --cov=core --cov=src --cov-report=xml --cov-report=term-missing
+          PYTHONPATH=backend pytest backend/tests/ -v --cov=backend/core --cov-report=xml --cov-report=term-missing
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
@@ -91,7 +91,7 @@ jobs:
       - name: Build Docker image
         uses: docker/build-push-action@v4
         with:
-          context: .
+          context: ./backend
           push: false
           tags: benchmark:latest
           cache-from: type=gha
