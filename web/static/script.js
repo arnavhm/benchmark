@@ -1185,6 +1185,8 @@ function renderScoresTable(data) {
             ${categories.map(c => `<th>${c.charAt(0).toUpperCase() + c.slice(1)}</th>`).join('')}
             <th class="th-overall">Overall</th>
             <th>Avg Time</th>
+            <th>p95 Time</th>
+            <th>p99 Time</th>
           </tr>
         </thead>
         <tbody>`;
@@ -1193,6 +1195,8 @@ function renderScoresTable(data) {
     const color = data.model_colors[model] || '#6c5ce7';
     const overall = Number((data.overall_scores && data.overall_scores[model]) ?? 0);
     const avgTime = Number((data.avg_response_times && data.avg_response_times[model]) ?? 0);
+    const p95Time = Number((data.p95_response_times && data.p95_response_times[model]) ?? 0);
+    const p99Time = Number((data.p99_response_times && data.p99_response_times[model]) ?? 0);
 
     html += `<tr class="table-row" style="--row-color: ${color}">
       <td class="td-model">
@@ -1215,6 +1219,8 @@ function renderScoresTable(data) {
         <div class="overall-bar" style="width:${overall}%; background:${color}40; border-color:${color}"></div>
       </td>
       <td class="td-time">${isFinite(avgTime) ? avgTime.toFixed(3) + 's' : '—'}</td>
+      <td class="td-time">${isFinite(p95Time) ? p95Time.toFixed(3) + 's' : '—'}</td>
+      <td class="td-time">${isFinite(p99Time) ? p99Time.toFixed(3) + 's' : '—'}</td>
     </tr>`;
   });
 
@@ -1252,6 +1258,13 @@ function renderEvaluationMetrics(metrics) {
       <span class="eval-diff-pill eval-diff-pill--${d}">${d[0].toUpperCase()} ${v}%</span>
     `).join('');
 
+    const pValue = m.p_value;
+    const sigBadge = idx === 0
+      ? '<span class="sig-pill sig-pill--leader">Leader</span>'
+      : pValue < 0.05
+        ? `<span class="sig-pill sig-pill--significant" title="Statistically significant difference (p < 0.05)">p = ${pValue} (Sig)</span>`
+        : `<span class="sig-pill sig-pill--ns" title="Not statistically significant difference (p >= 0.05)">p = ${pValue} (NS)</span>`;
+
     return `
       <tr class="eval-row ${idx === 0 ? 'eval-row--top' : ''}">
         <td class="eval-td eval-td--rank">${idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`}</td>
@@ -1269,8 +1282,8 @@ function renderEvaluationMetrics(metrics) {
           <div class="eval-stat-sub">±${acc.std} std · CI [${acc.ci_lower}–${acc.ci_upper}]</div>
         </td>
         <td class="eval-td eval-td--f1">
-          <span class="eval-badge">${m.f1.mean}%</span>
-          <span class="eval-badge-sub">±${m.f1.std}</span>
+          <span class="eval-badge">${m.nlp_similarity ? m.nlp_similarity.mean : m.f1.mean}%</span>
+          <span class="eval-badge-sub">±${m.nlp_similarity ? m.nlp_similarity.std : m.f1.std}</span>
         </td>
         <td class="eval-td eval-td--err">
           <span class="eval-err ${m.error_rate > 20 ? 'eval-err--high' : ''}">${m.error_rate}%</span>
@@ -1281,6 +1294,7 @@ function renderEvaluationMetrics(metrics) {
           </div>
           <span class="eval-ci-label">${acc.ci_lower}–${acc.ci_upper}%</span>
         </td>
+        <td class="eval-td eval-td--sig">${sigBadge}</td>
       </tr>`;
   }).join('');
 
@@ -1288,7 +1302,7 @@ function renderEvaluationMetrics(metrics) {
     <div class="eval-card">
       <div class="eval-legend">
         ${taskIcon} Evaluated on <strong>${dataset_size} questions</strong> (${task_type} task) ·
-        <strong>${n_trials} independent trials</strong> with fixed seeds · 95% confidence intervals shown
+        <strong>${n_trials} independent trials</strong> with fixed seeds · 95% confidence intervals & Welch's t-test significance shown
       </div>
       <div class="eval-table-wrap">
         <table class="eval-table">
@@ -1297,17 +1311,18 @@ function renderEvaluationMetrics(metrics) {
               <th class="eval-th">#</th>
               <th class="eval-th">Model</th>
               <th class="eval-th">Accuracy (mean ± std)</th>
-              <th class="eval-th">Keyword F1</th>
+              <th class="eval-th">NLP Semantic Sim.</th>
               <th class="eval-th">Error Rate</th>
               <th class="eval-th">95% CI</th>
+              <th class="eval-th">Significance vs #1</th>
             </tr>
           </thead>
           <tbody>${rows}</tbody>
         </table>
       </div>
       <div class="eval-footnote">
-        Accuracy = % of questions answered correctly · F1 = keyword recall/precision harmonic mean ·
-        CI computed via standard error over ${n_trials} trials
+        Accuracy = % of questions answered correctly · NLP Semantic Sim. = TF-IDF Cosine Similarity of answers ·
+        CI computed via standard error over ${n_trials} trials · Significance computed via Welch's t-test (two-tailed, alpha=0.05)
       </div>
     </div>`;
 }

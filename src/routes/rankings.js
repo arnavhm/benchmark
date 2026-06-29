@@ -150,7 +150,7 @@ router.post("/api/datasets/analyze", upload.single("file"), async (req, res, nex
     });
     const modelPayload = await getModels(req.body?.source || "local");
     const recommendation = recommendModelsForDataset(modelPayload.models, analysis);
-    const evaluation_metrics = runTrials(recommendation.allRankings, records, analysis.type);
+    const evaluation_metrics = await runTrials(recommendation.allRankings, records, analysis.type);
 
     res.json({
       ...toCustomResultsPayload(recommendation, analysis, {
@@ -182,7 +182,7 @@ router.post("/upload-custom-dataset", upload.single("file"), async (req, res, ne
     });
     const modelPayload = await getModels("local");
     const recommendation = recommendModelsForDataset(modelPayload.models, analysis);
-    const evaluation_metrics = runTrials(recommendation.allRankings, records, analysis.type);
+    const evaluation_metrics = await runTrials(recommendation.allRankings, records, analysis.type);
 
     res.json({
       message: `Analyzed ${records.length} samples successfully.`,
@@ -201,12 +201,33 @@ router.post("/upload-custom-dataset", upload.single("file"), async (req, res, ne
   }
 });
 
-router.get("/api-status", (req, res) => {
+router.get("/api-status", async (req, res) => {
+  const keySet = hasGeminiKey();
+  let geminiReady = false;
+
+  if (keySet) {
+    try {
+      const model = process.env.DATASET_ANALYZER_MODEL || "gemini-2.5-flash";
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(process.env.GEMINI_API_KEY)}`;
+      const probe = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ role: "user", parts: [{ text: "hi" }] }],
+          generationConfig: { maxOutputTokens: 1 }
+        })
+      });
+      geminiReady = probe.ok;
+    } catch {
+      geminiReady = false;
+    }
+  }
+
   res.json({
-    gemini_sdk_installed: hasGeminiKey(),
-    gemini_api_key_set: hasGeminiKey(),
-    gemini_ready: hasGeminiKey(),
-    llm_dataset_analyzer: hasGeminiKey(),
+    gemini_sdk_installed: keySet,
+    gemini_api_key_set: keySet,
+    gemini_ready: geminiReady,
+    llm_dataset_analyzer: geminiReady,
     dataset_analyzer_model: process.env.DATASET_ANALYZER_MODEL || "gemini-2.5-flash"
   });
 });

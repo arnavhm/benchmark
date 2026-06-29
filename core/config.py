@@ -5,6 +5,10 @@ Environment-based settings with validation.
 
 from typing import Optional
 
+from dotenv import load_dotenv
+# Load environment variables from .env file
+load_dotenv()
+
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -99,6 +103,7 @@ class Settings(BaseSettings):
         case_sensitive=True,
         env_file=".env",
         env_file_encoding="utf-8",
+        extra="ignore",
     )
 
     @field_validator("environment")

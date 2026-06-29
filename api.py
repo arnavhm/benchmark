@@ -339,6 +339,26 @@ def create_app() -> FastAPI:
             logger.error("stats_error", error=str(e))
             raise HTTPException(status_code=500, detail="Failed to fetch statistics")
 
+    from pydantic import BaseModel
+    
+    class NLPRequest(BaseModel):
+        predicted: str
+        ground_truth: str
+
+    @v1_router.post("/evaluate/nlp")
+    async def evaluate_nlp(request: NLPRequest):
+        """
+        Evaluate semantic similarity between predicted text and ground truth
+        using TF-IDF cosine similarity.
+        """
+        from core.evaluators import nlp_evaluator
+        
+        score = nlp_evaluator.calculate_similarity(
+            predicted=request.predicted,
+            ground_truth=request.ground_truth
+        )
+        return {"similarity": score}
+
     app.include_router(v1_router)
 
     # ========================================================================

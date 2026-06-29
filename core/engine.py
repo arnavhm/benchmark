@@ -254,8 +254,30 @@ class BenchmarkEngine:
                     status=result.get("status", "success"),
                 )
 
+                # Look up model or create it
+                model_name = validated_result.model_name
+                db_model = db.query(Model).filter_by(name=model_name).first()
+                if not db_model:
+                    # Determine provider
+                    name_lower = model_name.lower()
+                    if "gpt" in name_lower or "o1" in name_lower:
+                        provider = "OpenAI"
+                    elif "claude" in name_lower:
+                        provider = "Anthropic"
+                    elif "llama" in name_lower:
+                        provider = "Meta"
+                    elif "gemini" in name_lower:
+                        provider = "Google"
+                    else:
+                        provider = "Unknown"
+                    
+                    db_model = Model(name=model_name, provider=provider)
+                    db.add(db_model)
+                    db.flush()  # Populate the ID of the model
+
                 # Create database record
                 db_result = BenchmarkResult(
+                    model_id=db_model.id,
                     model_name=validated_result.model_name,
                     dataset_id=dataset_id,
                     accuracy=validated_result.accuracy,

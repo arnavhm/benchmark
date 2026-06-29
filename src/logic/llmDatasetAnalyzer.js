@@ -173,6 +173,11 @@ async function analyzeDatasetWithLLM(samples) {
     try {
       return await requestGeminiOpenAIAnalysis(openAiUrl, prompt);
     } catch (error) {
+      // 401/403 means the key itself is invalid or blocked — no point retrying
+      if (error.status === 401 || error.status === 403) {
+        console.warn("Gemini API key is invalid or access is denied:", error.message || error);
+        return null;
+      }
       if (error.status === 429) {
         const delayMs = parseRetryDelayMs(error.errorText || "");
         await sleep(delayMs);

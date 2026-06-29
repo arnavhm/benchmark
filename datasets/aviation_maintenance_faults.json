@@ -1,0 +1,32 @@
+[
+  {
+    "id": "AMF-001",
+    "question": "An aircraft gas turbine engine experiences high Exhaust Gas Temperature (EGT) combined with a lower-than-normal Engine Pressure Ratio (EPR) during takeoff roll. What is the most likely root cause and recommended maintenance action?",
+    "ground_truth": "The symptoms indicate compressor blade degradation or a compressor stall. A borescope inspection of the high-pressure compressor (HPC) blades and stator vanes should be performed to check for erosion, foreign object damage (FOD), or tip clearance issues.",
+    "difficulty": "hard"
+  },
+  {
+    "id": "AMF-002",
+    "question": "During a routine pre-flight check, the crew reports a slow spool-up time on engine 2 and abnormal vibration indications on the N1 shaft. What component is likely failing?",
+    "ground_truth": "A slow spool-up time paired with N1 shaft vibration strongly suggests an issue with the fan blades (such as ice accumulation or damage) or the front bearing (No. 1 bearing) beginning to fail. Inspect the fan section for balance and the bearing for wear.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "AMF-003",
+    "question": "Post-flight maintenance logs show repeated low oil pressure warnings accompanied by higher than normal scavenge oil temperatures. The oil filter delta-p indicator has not popped. What should be investigated?",
+    "ground_truth": "The combination of low oil pressure and high scavenge temperatures without filter clogging suggests an internal oil leak, a failing oil pressure pump, or coking in the bearing compartments. Inspect the main oil pump and check the scavenge lines for restricted flow or coking.",
+    "difficulty": "hard"
+  },
+  {
+    "id": "AMF-004",
+    "question": "The pilot reports a transient fuel flow fluctuation during cruise altitude, accompanied by a brief drop in thrust. The Engine Electronic Control (EEC) shows no active fault codes. What is the probable cause?",
+    "ground_truth": "Transient fuel flow fluctuations without EEC faults often point to a sticky Fuel Metering Unit (FMU) valve or air ingestion in the fuel lines. A fuel sample should be taken to check for contamination, and the FMU servo pressures should be tested.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "AMF-005",
+    "question": "Ground crew notices a dark, sooty exhaust plume during engine start, and the engine takes longer than normal to reach idle RPM (hung start). What is the corrective action?",
+    "ground_truth": "A sooty exhaust and a hung start indicate a rich fuel mixture or insufficient starter torque. The maintenance action is to test the pneumatic starter motor for proper torque output and inspect the fuel nozzles for coking or improper spray patterns.",
+    "difficulty": "hard"
+  }
+]

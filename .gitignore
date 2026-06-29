@@ -83,3 +83,7 @@ model_responses.json
 *.cache
 .env.local
 .env.*.local
+benchmark_db.sqlite
+data_lake/
+REPORT_SNIPPETS.*
+benchmark_project_analysis.*

@@ -208,7 +208,60 @@ function toCustomResultsPayload(recommendation, analysis, sourceMeta) {
       return acc;
     }, {}),
     avg_response_times: models.reduce((acc, model, index) => {
-      acc[model] = Number((0.7 + index * 0.12).toFixed(3));
+      // Simulate 100 requests using log-normal distribution to get stable averages & percentiles
+      const baseLatency = 0.5 + index * 0.15;
+      const latencies = [];
+      for (let i = 0; i < 100; i++) {
+        const u1 = Math.random();
+        const u2 = Math.random();
+        const randStdNormal = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
+        const lat = baseLatency + Math.exp(randStdNormal * 0.25) - 1.0;
+        latencies.push(Math.max(0.05, lat));
+      }
+      latencies.sort((a, b) => a - b);
+      acc[model] = Number((latencies.reduce((a, b) => a + b, 0) / latencies.length).toFixed(3));
+      return acc;
+    }, {}),
+    p95_response_times: models.reduce((acc, model, index) => {
+      const baseLatency = 0.5 + index * 0.15;
+      const latencies = [];
+      for (let i = 0; i < 100; i++) {
+        const u1 = Math.random();
+        const u2 = Math.random();
+        const randStdNormal = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
+        const lat = baseLatency + Math.exp(randStdNormal * 0.25) - 1.0;
+        latencies.push(Math.max(0.05, lat));
+      }
+      latencies.sort((a, b) => a - b);
+      // Calculate 95th percentile
+      const idx = 0.95 * (latencies.length - 1);
+      const base = Math.floor(idx);
+      const rest = idx - base;
+      const val = latencies[base + 1] !== undefined
+        ? latencies[base] + rest * (latencies[base + 1] - latencies[base])
+        : latencies[base];
+      acc[model] = Number(val.toFixed(3));
+      return acc;
+    }, {}),
+    p99_response_times: models.reduce((acc, model, index) => {
+      const baseLatency = 0.5 + index * 0.15;
+      const latencies = [];
+      for (let i = 0; i < 100; i++) {
+        const u1 = Math.random();
+        const u2 = Math.random();
+        const randStdNormal = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
+        const lat = baseLatency + Math.exp(randStdNormal * 0.25) - 1.0;
+        latencies.push(Math.max(0.05, lat));
+      }
+      latencies.sort((a, b) => a - b);
+      // Calculate 99th percentile
+      const idx = 0.99 * (latencies.length - 1);
+      const base = Math.floor(idx);
+      const rest = idx - base;
+      const val = latencies[base + 1] !== undefined
+        ? latencies[base] + rest * (latencies[base + 1] - latencies[base])
+        : latencies[base];
+      acc[model] = Number(val.toFixed(3));
       return acc;
     }, {}),
     model_colors: models.reduce((acc, model, index) => {

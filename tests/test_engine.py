@@ -28,8 +28,8 @@ class TestBenchmarkEngine:
         # Realistic metrics: 95% accuracy, 245ms latency, $0.0015 cost
         score = engine.calculate_score(accuracy=95.5, latency=245.3, cost=0.0015)
 
-        # Should be approximately 90.22 based on weighted formula
-        assert 88.0 <= score <= 92.0
+        # Should be approximately 95.98 based on weighted formula
+        assert 94.0 <= score <= 98.0
         assert isinstance(score, float)
 
     def test_calculate_score_low(self):

@@ -1,12 +1,32 @@
 [
   {
     "model": "GPT-4o",
-    "accuracy": 78.91,
-    "latency": 1906.25,
-    "cost": 0.0064,
-    "final_score": 76.74,
+    "accuracy": 78.48,
+    "latency": 1714.05,
+    "cost": 0.0062,
+    "final_score": 77.72,
     "tier": "Analysis",
-    "execution_time": 0.42578983306884766,
+    "execution_time": 0.1423493226369222,
+    "status": "success"
+  },
+  {
+    "model": "Claude-3.5",
+    "accuracy": 73.0,
+    "latency": 2238.87,
+    "cost": 0.0036,
+    "final_score": 72.35,
+    "tier": "Analysis",
+    "execution_time": 0.1423493226369222,
+    "status": "success"
+  },
+  {
+    "model": "Llama-3",
+    "accuracy": 75.61,
+    "latency": 1480.01,
+    "cost": 0.0022,
+    "final_score": 78.48,
+    "tier": "Analysis",
+    "execution_time": 0.1423493226369222,
     "status": "success"
   }
 ]
