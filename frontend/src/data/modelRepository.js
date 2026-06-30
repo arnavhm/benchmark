@@ -1,7 +1,7 @@
 const fs = require("fs/promises");
 const path = require("path");
 
-const MODELS_PATH = path.join(__dirname, "..", "..", "data", "models.json");
+const MODELS_PATH = path.join(__dirname, "..", "..", "..", "data", "models.json");
 
 async function loadModelsFromFile(filePath = MODELS_PATH) {
   const raw = await fs.readFile(filePath, "utf8");
