@@ -8,10 +8,10 @@
 const fs = require("fs");
 const path = require("path");
 
-const { loadEnv, keyReport } = require("./env");
+const { loadEnv, keyReport, envLikeFiles } = require("./env");
 const envFiles = loadEnv();
 if (process.argv.includes("--check")) {
-  console.log(envFiles.length ? `Loaded .env from: ${envFiles.join(", ")}` : "No .env file found - create one in the project root (copy .env.example).");
+  console.log(envFiles.length ? `Loaded keys from: ${envFiles.join(", ")}` : `No .env file with keys found. Env-like files in the project folder: ${envLikeFiles().join(", ") || "none"}. Create a file named exactly .env next to .env.example.`);
   console.log(`API keys:\n${keyReport()}\n`);
 }
 

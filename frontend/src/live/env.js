@@ -29,23 +29,40 @@ function parse(text) {
   return out;
 }
 
+// Accepted file names, in priority order. ".env.example" is a last resort so a demo still works
+// when keys were typed straight into the example file (never commit real keys!).
+const NAMES = [".env", ".env.local", ".env.txt", "env", "env.txt", ".env.example"];
+
 function loadEnv() {
   const root = path.join(__dirname, "..", "..", "..");
-  const candidates = [...new Set([
-    path.join(root, ".env"),
-    path.join(root, "frontend", ".env"),
-    path.join(process.cwd(), ".env")
-  ])];
+  const dirs = [...new Set([root, path.join(root, "frontend"), process.cwd()])];
   const loaded = [];
-  for (const file of candidates) {
-    if (!fs.existsSync(file)) continue;
-    loaded.push(file);
-    const vars = parse(fs.readFileSync(file, "utf8"));
-    for (const [k, v] of Object.entries(vars)) {
-      if (!isReal(process.env[k]) && (isReal(v) || process.env[k] === undefined)) process.env[k] = v;
+  for (const name of NAMES) {
+    for (const dir of dirs) {
+      const file = path.join(dir, name);
+      if (!fs.existsSync(file) || !fs.statSync(file).isFile()) continue;
+      const vars = parse(fs.readFileSync(file, "utf8"));
+      let used = false;
+      for (const [k, v] of Object.entries(vars)) {
+        if (!isReal(process.env[k]) && (isReal(v) || process.env[k] === undefined)) {
+          process.env[k] = v;
+          if (isReal(v)) used = true;
+        }
+      }
+      if (used || name === ".env") loaded.push(file);
     }
   }
   return loaded;
+}
+
+/** Files in the project root that look like env files — printed when keys are missing, to help debugging. */
+function envLikeFiles() {
+  const root = path.join(__dirname, "..", "..", "..");
+  try {
+    return fs.readdirSync(root).filter((f) => /env/i.test(f));
+  } catch {
+    return [];
+  }
 }
 
 function keyReport() {
@@ -53,4 +70,4 @@ function keyReport() {
   return ["GROQ_API_KEY", "OPENROUTER_API_KEY", "GEMINI_API_KEY"].map((k) => `  ${k}: ${mask(process.env[k])}`).join("\n");
 }
 
-module.exports = { loadEnv, keyReport, parse };
+module.exports = { loadEnv, keyReport, parse, envLikeFiles };

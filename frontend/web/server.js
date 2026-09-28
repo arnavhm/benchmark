@@ -5,7 +5,7 @@ const fs = require("fs");
 const rankingRoutes = require("../src/routes/rankings");
 const liveRoutes = require("../src/routes/live");
 
-const { loadEnv, keyReport } = require("../src/live/env");
+const { loadEnv, keyReport, envLikeFiles } = require("../src/live/env");
 const envFiles = loadEnv();
 
 const app = express();
@@ -31,7 +31,7 @@ app.use((error, req, res, next) => {
 if (require.main === module) {
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`AI Benchmark Analyzer running at http://127.0.0.1:${PORT}`);
-    console.log(envFiles.length ? `Loaded .env from: ${envFiles.join(", ")}` : "No .env file found - create one in the project root (copy .env.example).");
+    console.log(envFiles.length ? `Loaded keys from: ${envFiles.join(", ")}` : `No .env file with keys found. Env-like files in the project folder: ${envLikeFiles().join(", ") || "none"}. Create a file named exactly .env next to .env.example.`);
     console.log(`API keys:\n${keyReport()}`);
   });
 }
