@@ -28,5 +28,65 @@
     "question": "Ground crew notices a dark, sooty exhaust plume during engine start, and the engine takes longer than normal to reach idle RPM (hung start). What is the corrective action?",
     "ground_truth": "A sooty exhaust and a hung start indicate a rich fuel mixture or insufficient starter torque. The maintenance action is to test the pneumatic starter motor for proper torque output and inspect the fuel nozzles for coking or improper spray patterns.",
     "difficulty": "hard"
+  },
+  {
+    "id": "AMF-006",
+    "question": "During a ground start, N2 rises normally but then stagnates well below ground idle while EGT climbs slowly. The start does not complete. What is the most likely cause and what should be checked?",
+    "ground_truth": "This is a hung start, most commonly caused by insufficient starter assist: low APU/ground-cart bleed air pressure or a starter air valve that is not fully opening (or a weak starter). Abort the start, then check APU bleed/duct pressure, starter air valve operation and the starter itself; only if the air supply is normal investigate the fuel metering (FMU) start schedule.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "AMF-007",
+    "question": "During engine start, EGT rises very rapidly shortly after fuel is introduced and exceeds the start EGT limit before the crew aborts. What is the most likely cause and what maintenance action is required?",
+    "ground_truth": "This is a hot start, caused by excess fuel relative to airflow: fuel introduced at too low an N2 (weak starter air / low bleed pressure) or a fuel metering unit (FMU) over-scheduling fuel. Record peak EGT and duration, perform the AMM hot-start/EGT exceedance inspection including a borescope of the combustor and HPT, and check the FMU and starter air supply before the next start.",
+    "difficulty": "hard"
+  },
+  {
+    "id": "AMF-008",
+    "question": "Oil consumption on one engine has risen sharply over several flights. There are no external leaks, the oil filter is clean, and cabin crew once reported an oily smell during climb. What is the most likely cause and what should be inspected?",
+    "ground_truth": "Oil is being lost internally, most likely through worn or failed bearing-sump seals (e.g. carbon seals) letting oil into the gas path or bleed air, or through an internal leak in the fuel/oil heat exchanger (oil lost into fuel). Trend oil consumption, inspect bleed ducts and the exhaust/gas path for oil wetting, check the fuel/oil heat exchanger for internal leakage, and inspect the affected sump seals per the AMM.",
+    "difficulty": "hard"
+  },
+  {
+    "id": "AMF-009",
+    "question": "High vibration is indicated on the N2 (core) shaft at cruise, while N1 vibration remains normal. What is the most likely cause and what inspection should be performed?",
+    "ground_truth": "An imbalance of the high-pressure rotor, most likely HPC or HPT blade damage or material loss (or a failing HP rotor bearing). Perform a borescope inspection of the HPC and HPT stages, check the magnetic chip detectors and oil filter for metal, and review the vibration trend/fault data per the AMM.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "AMF-010",
+    "question": "Engine condition trend monitoring shows EGT margin gradually shrinking over several months, with fuel flow slowly increasing at the same thrust setting. What is the most likely cause and the recommended action?",
+    "ground_truth": "Normal performance deterioration from compressor fouling and hot-section wear (HPT blade erosion and increased tip clearances). Perform an on-wing compressor (engine) wash and re-check the trend; if EGT margin does not recover, borescope the HPC and HPT and plan an engine shop visit before the margin reaches the limit.",
+    "difficulty": "easy"
+  },
+  {
+    "id": "AMF-011",
+    "question": "The fuel filter impending-bypass indication comes on and the crew reports fuel flow fluctuations. What is the most likely cause and what should be done?",
+    "ground_truth": "The main fuel filter is clogging due to fuel contamination (debris, water or microbial growth). Replace the fuel filter and examine the element and debris, take fuel samples from the aircraft tanks and drain the sumps to check for water or microbial contamination, and trace/clean the contamination source before return to service.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "AMF-012",
+    "question": "The crew reports a bird strike on engine 1 during takeoff. All engine parameters remained normal for the rest of the flight. What maintenance action is required?",
+    "ground_truth": "A mandatory bird-strike inspection per the AMM even though parameters were normal: inspect the inlet, spinner, fan blades (nicks, dents, curl, leading-edge damage) and acoustic liners, look for bird remains in the bypass duct and core inlet, and if there is evidence of core ingestion perform a borescope inspection of the booster/HPC; review vibration data.",
+    "difficulty": "easy"
+  },
+  {
+    "id": "AMF-013",
+    "question": "During start, N2 reaches normal light-off speed and fuel flow is indicated, but there is no EGT rise and the engine does not light. What is the most likely cause and what should be checked?",
+    "ground_truth": "The ignition system is not firing: a failed ignition exciter, igniter plug or ignition lead (or an ignition power/selection fault). Check for igniter operation (audible test/system test), inspect and replace igniter plugs, and check the exciter output and high-tension leads; clear fuel from the engine with a dry motoring cycle before another start attempt.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "AMF-014",
+    "question": "At altitude, a rapid thrust lever advance produces loud bangs, a brief EGT spike and N1/N2 fluctuations before the engine recovers. What is the most likely cause and what should be investigated?",
+    "ground_truth": "A compressor surge/stall, most likely from incorrect variable stator vane (VSV) scheduling or rigging, or variable bleed valves not opening as scheduled (or existing compressor damage). Retrieve FADEC fault codes, check VSV actuator/rigging and bleed valve operation, and borescope the compressor for blade damage per the AMM surge inspection.",
+    "difficulty": "hard"
+  },
+  {
+    "id": "AMF-015",
+    "question": "During a routine check, the magnetic chip detector is found with metallic flakes and the oil filter delta-P indicator has popped. What is the most likely cause and what action is required?",
+    "ground_truth": "Internal distress of a main bearing or gear (bearing/gearbox failure) generating metal debris. Do not dispatch: analyse the debris (material identification / spectrometric oil analysis) to identify the source, inspect each sump's chip detector to localise it, and follow the AMM debris limits, which typically require engine removal if bearing material is confirmed.",
+    "difficulty": "hard"
   }
 ]

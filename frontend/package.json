@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node web/server.js",
     "dev": "node web/server.js",
-    "test": "jest --testPathPatterns='__tests__' --forceExit"
+    "test": "jest --testPathPatterns='__tests__' --forceExit",
+    "live": "node src/live/cli.js",
+    "live:check": "node src/live/cli.js --check"
   },
   "jest": {
     "testEnvironment": "node",

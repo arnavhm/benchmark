@@ -1,0 +1,529 @@
+{
+  "id": "run-2026-09-28T06-55-17-138Z",
+  "startedAt": "2026-09-28T06:55:17.138Z",
+  "dataset": {
+    "id": "aviation",
+    "label": "Aviation maintenance fault diagnosis",
+    "size": 3
+  },
+  "judge": {
+    "label": "GPT-OSS 120B (blind judge, via Groq)",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b"
+  },
+  "contestants": [
+    {
+      "key": "gemini-flash",
+      "label": "Gemini 3.5 Flash",
+      "vendor": "Google",
+      "provider": "gemini",
+      "model": "gemini-3.5-flash"
+    },
+    {
+      "key": "gpt-oss-20b",
+      "label": "GPT-OSS 20B (via Groq)",
+      "vendor": "OpenAI (open-weight)",
+      "provider": "groq",
+      "model": "openai/gpt-oss-20b"
+    },
+    {
+      "key": "qwen-27b",
+      "label": "Qwen3.8 27B (via Groq)",
+      "vendor": "Alibaba (open-weight)",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b"
+    },
+    {
+      "key": "nemotron-120b",
+      "label": "Nemotron 3 Super 120B (via OpenRouter, free)",
+      "vendor": "NVIDIA (open-weight)",
+      "provider": "openrouter",
+      "model": "nvidia/nemotron-3-super-120b-a12b:free"
+    }
+  ],
+  "skipped": [],
+  "method": {
+    "scoring": "Blind LLM-as-judge, 0-10 rubric per answer vs expert reference (answers shuffled and anonymised)",
+    "composite": "accuracy x 0.625 + speed x 0.375 (the 0.5/0.3 accuracy/speed weights, cost left out because every call runs on a free tier); speed = 0 at 10s mean latency",
+    "tiers": "Production > 85, Analysis > 70 (composite), capped by accuracy: Production needs >= 85% judged accuracy, Analysis >= 70%. Ranked by accuracy first.",
+    "ci": "95% bootstrap CI over questions (2000 resamples)"
+  },
+  "questions": [
+    {
+      "id": "AMF-001",
+      "question": "An aircraft gas turbine engine experiences high Exhaust Gas Temperature (EGT) combined with a lower-than-normal Engine Pressure Ratio (EPR) during takeoff roll. What is the most likely root cause and recommended maintenance action?",
+      "reference": "The symptoms indicate compressor blade degradation or a compressor stall. A borescope inspection of the high-pressure compressor (HPC) blades and stator vanes should be performed to check for erosion, foreign object damage (FOD), or tip clearance issues.",
+      "difficulty": "hard",
+      "answers": [
+        {
+          "key": "gemini-flash",
+          "ok": true,
+          "text": "The most likely root cause is **turbine section degradation**, specifically thermal distress, erosion, or increased tip clearances of the High-Pressure Turbine (HPT) blades and nozzle guide vanes. This loss of turbine efficiency forces the engine control unit to inject more fuel to maintain target fan speed, driving EGT up, while the compromised turbine fails to produce sufficient compressor work, resulting in a lower-than-normal EPR.\n\nThe recommended maintenance action is to perform a **borescope inspection (BSI)** of the HPT and High-Pressure Compressor (HPC) sections to inspect for blade erosion, burning, cracking, or foreign object damage (FOD), and compare findings against the Aircraft Maintenance Manual (AMM) limits for engine removal or repair.",
+          "latencyMs": 17520,
+          "inputTokens": 73,
+          "outputTokens": 1272,
+          "reasoningTokens": 1121,
+          "costUsd": 0.0115575,
+          "costSource": "list-price",
+          "servedModel": "gemini-3.5-flash",
+          "servedBy": "gemini-3.5-flash",
+          "fallbackUsed": false,
+          "lexical": 0.391,
+          "grade": {
+            "score": 0,
+            "breakdown": {
+              "rootCause": 0,
+              "action": 0
+            },
+            "verdict": "incorrect",
+            "rationale": "Identifies turbine issue; reference points to compressor degradation.",
+            "label": "A"
+          }
+        },
+        {
+          "key": "gpt-oss-20b",
+          "ok": true,
+          "text": "**Root cause:** Compressor stall/surge caused by damaged or fouled fan/compressor blades, producing a low pressure ratio while the combustor continues to burn fuel, raising EGT.\n\n**Recommended action:** Perform an immediate visual and ultrasonic inspection of the fan and compressor blades for cracks, erosion, or foreign‑object damage, followed by a full compressor‑core inspection and, if needed, replace the affected blades.",
+          "latencyMs": 901,
+          "inputTokens": 139,
+          "outputTokens": 181,
+          "reasoningTokens": 89,
+          "costUsd": 0.00006472499999999999,
+          "costSource": "list-price",
+          "servedModel": "openai/gpt-oss-20b",
+          "servedBy": "openai/gpt-oss-20b",
+          "fallbackUsed": false,
+          "lexical": 0.483,
+          "grade": {
+            "score": 10,
+            "breakdown": {
+              "rootCause": 6,
+              "action": 4
+            },
+            "verdict": "correct",
+            "rationale": "Compressor stall aligns with reference; suggests thorough compressor inspection and blade replacement.",
+            "label": "C"
+          }
+        },
+        {
+          "key": "qwen-27b",
+          "ok": true,
+          "text": "The most likely root cause is a failed or stuck-open Exhaust Gas Temperature (EGT) sensor. A faulty sensor can provide a false high reading while the engine actually operates normally or with slightly reduced efficiency, explaining the discrepancy with the lower-than-normal Engine Pressure Ratio (EPR).\n\nThe recommended maintenance action is to perform a cross-check of the EGT indication against the backup or alternate EGT sensor (if equipped) and verify the EPR reading against the N1 or N2 speed. If the discrepancy persists, replace the suspect EGT sensor and conduct a full engine performance test to confirm normal operation before returning the aircraft to service.",
+          "latencyMs": 649,
+          "inputTokens": 83,
+          "outputTokens": 129,
+          "reasoningTokens": 0,
+          "costUsd": null,
+          "costSource": "list-price",
+          "servedModel": "qwen/qwen3.8-27b",
+          "servedBy": "qwen/qwen3.8-27b",
+          "fallbackUsed": false,
+          "lexical": 0,
+          "grade": {
+            "score": 0,
+            "breakdown": {
+              "rootCause": 0,
+              "action": 0
+            },
+            "verdict": "incorrect",
+            "rationale": "Blames sensor failure; reference indicates compressor problem.",
+            "label": "D"
+          }
+        },
+        {
+          "key": "nemotron-120b",
+          "ok": true,
+          "text": "The most likely root cause is compressor fouling or inlet obstruction reducing the pressure ratio (low EPR) while the engine compensates by raising turbine inlet temperature (high EGT).  \n**Recommended action:** Conduct a borescope inspection of the compressor stages and inlet, clean any fouled blades or debris, and repair or replace damaged components as found.",
+          "latencyMs": 5165,
+          "inputTokens": 87,
+          "outputTokens": 275,
+          "reasoningTokens": 254,
+          "costUsd": 0,
+          "costSource": "billed",
+          "servedModel": "nvidia/nemotron-3-super-120b-a12b:free",
+          "servedBy": "nvidia/nemotron-3-super-120b-a12b:free",
+          "fallbackUsed": false,
+          "lexical": 0.241,
+          "grade": {
+            "score": 10,
+            "breakdown": {
+              "rootCause": 6,
+              "action": 4
+            },
+            "verdict": "correct",
+            "rationale": "Compressor fouling matches reference; recommends borescope inspection of compressor.",
+            "label": "B"
+          }
+        }
+      ],
+      "judgeCall": {
+        "latencyMs": 2838.818791999998,
+        "costUsd": 0.00077565,
+        "inputTokens": 1019,
+        "outputTokens": 1038,
+        "servedBy": "openai/gpt-oss-120b",
+        "fallbackUsed": false
+      }
+    },
+    {
+      "id": "AMF-002",
+      "question": "During a routine pre-flight check, the crew reports a slow spool-up time on engine 2 and abnormal vibration indications on the N1 shaft. What component is likely failing?",
+      "reference": "A slow spool-up time paired with N1 shaft vibration strongly suggests an issue with the fan blades (such as ice accumulation or damage) or the front bearing (No. 1 bearing) beginning to fail. Inspect the fan section for balance and the bearing for wear.",
+      "difficulty": "medium",
+      "answers": [
+        {
+          "key": "gemini-flash",
+          "ok": true,
+          "text": "The most likely root cause is a **bearing failure** (specifically the N1 shaft support bearing) or **internal damage to the N1 turbine/compressor assembly** (such as blade tip rub or FOD).\n\n**Maintenance Action:** Perform a **borescope inspection** of the N1 turbine and compressor sections to check for blade damage, shroud rubbing, or metallic debris. Simultaneously, perform a **magnetic chip detector inspection** and oil filter analysis to check for metallic particles, which would confirm bearing degradation or internal mechanical failure. If debris is present, the engine must be removed for a teardown.",
+          "latencyMs": 2270,
+          "inputTokens": 65,
+          "outputTokens": 122,
+          "reasoningTokens": 0,
+          "costUsd": 0.00019925,
+          "costSource": "list-price",
+          "servedModel": "gemini-3.1-flash-lite",
+          "servedBy": "gemini-3.1-flash-lite",
+          "fallbackUsed": true,
+          "lexical": 0.267,
+          "grade": {
+            "score": 8,
+            "breakdown": {
+              "rootCause": 6,
+              "action": 2
+            },
+            "verdict": "partial",
+            "rationale": "Includes correct bearing cause but adds unrelated turbine/compressor checks; inspection actions not fully aligned with reference.",
+            "label": "C"
+          }
+        },
+        {
+          "key": "gpt-oss-20b",
+          "ok": true,
+          "text": "**Root cause:** Wear or failure of the **N1 shaft main bearing** (or its associated bearing support).  \n**Action:** Perform a full inspection of the N1 shaft bearing assembly—check for bearing race wear, radial clearance, and oil contamination. If any abnormality is found, replace the bearing and re‑lubricate per the engine’s maintenance manual.",
+          "latencyMs": 899,
+          "inputTokens": 130,
+          "outputTokens": 143,
+          "reasoningTokens": 59,
+          "costUsd": 0.00005265,
+          "costSource": "list-price",
+          "servedModel": "openai/gpt-oss-20b",
+          "servedBy": "openai/gpt-oss-20b",
+          "fallbackUsed": false,
+          "lexical": 0.454,
+          "grade": {
+            "score": 10,
+            "breakdown": {
+              "rootCause": 6,
+              "action": 4
+            },
+            "verdict": "correct",
+            "rationale": "Correctly identifies front bearing failure; action calls for thorough bearing inspection and replacement per manual.",
+            "label": "D"
+          }
+        },
+        {
+          "key": "qwen-27b",
+          "ok": true,
+          "text": "The most likely root cause is a failing **N1 main bearing** (or associated thrust bearing) on Engine 2.\n\nThe combination of slow spool-up and abnormal N1 vibration strongly indicates increased friction and mechanical resistance within the low-pressure shaft assembly, typically caused by bearing wear, lubrication failure, or misalignment.\n\n**Specific Maintenance Action:**\n1.  **Perform a borescope inspection** of the N1 bearing area to check for visible wear, scoring, or debris.\n2.  **Conduct a vibration trend analysis** to confirm the frequency signature matches bearing defects.\n3.  **Replace the N1 main bearing assembly** if wear exceeds limits or if vibration persists after cleaning. Do not return the engine to service until vibration levels are within normal parameters and spool-up time is verified.",
+          "latencyMs": 1304,
+          "inputTokens": 75,
+          "outputTokens": 169,
+          "reasoningTokens": 0,
+          "costUsd": null,
+          "costSource": "list-price",
+          "servedModel": "qwen/qwen3.8-27b",
+          "servedBy": "qwen/qwen3.8-27b",
+          "fallbackUsed": false,
+          "lexical": 0.487,
+          "grade": {
+            "score": 10,
+            "breakdown": {
+              "rootCause": 6,
+              "action": 4
+            },
+            "verdict": "correct",
+            "rationale": "Matches front bearing cause; action includes proper bearing inspection and replacement per procedures.",
+            "label": "A"
+          }
+        },
+        {
+          "key": "nemotron-120b",
+          "ok": true,
+          "text": "The most likely failing component is the N1 shaft bearing (forward or aft bearing supporting the N1 rotor). Wear or damage increases drag, slowing spool‑up, and creates imbalance that shows as abnormal N1‑shaft vibration.  \n\n**Inspection/action:** Perform a detailed borescope/visual inspection of the N1 bearing per the engine maintenance manual, measure bearing clearance and condition, and replace the bearing if it exceeds limits. After replacement, re‑balance the N1 rotor and verify normal spool‑up and vibration levels.",
+          "latencyMs": 4385,
+          "inputTokens": 78,
+          "outputTokens": 335,
+          "reasoningTokens": 258,
+          "costUsd": 0,
+          "costSource": "billed",
+          "servedModel": "nvidia/nemotron-3-super-120b-a12b:free",
+          "servedBy": "nvidia/nemotron-3-super-120b-a12b:free",
+          "fallbackUsed": false,
+          "lexical": 0.44,
+          "grade": {
+            "score": 10,
+            "breakdown": {
+              "rootCause": 6,
+              "action": 4
+            },
+            "verdict": "correct",
+            "rationale": "Identifies front bearing issue; action prescribes inspection, clearance check, replacement and re‑balance as required.",
+            "label": "B"
+          }
+        }
+      ],
+      "judgeCall": {
+        "latencyMs": 3306.393750000003,
+        "costUsd": 0.0008944500000000001,
+        "inputTokens": 1043,
+        "outputTokens": 1230,
+        "servedBy": "openai/gpt-oss-120b",
+        "fallbackUsed": false
+      }
+    },
+    {
+      "id": "AMF-003",
+      "question": "Post-flight maintenance logs show repeated low oil pressure warnings accompanied by higher than normal scavenge oil temperatures. The oil filter delta-p indicator has not popped. What should be investigated?",
+      "reference": "The combination of low oil pressure and high scavenge temperatures without filter clogging suggests an internal oil leak, a failing oil pressure pump, or coking in the bearing compartments. Inspect the main oil pump and check the scavenge lines for restricted flow or coking.",
+      "difficulty": "hard",
+      "answers": [
+        {
+          "key": "gemini-flash",
+          "ok": true,
+          "text": "The most likely root cause is **internal oil cooler bypass or blockage**, or a **failing scavenge pump**. \n\nThe combination of high scavenge temperatures and low oil pressure indicates that oil is not being effectively cooled or returned to the reservoir, causing the system to run hot and lose pressure. Since the filter delta-P has not popped, the oil is likely bypassing the filter or the restriction is occurring downstream of the scavenge pump.\n\n**Action:** Perform a **scavenge system flow test** and inspect the **oil cooler/heat exchanger** for internal obstructions or failed bypass valves. Additionally, inspect the **scavenge pump** for internal wear or cavitation.",
+          "latencyMs": 1699,
+          "inputTokens": 65,
+          "outputTokens": 137,
+          "reasoningTokens": 0,
+          "costUsd": 0.00022175,
+          "costSource": "list-price",
+          "servedModel": "gemini-3.1-flash-lite",
+          "servedBy": "gemini-3.1-flash-lite",
+          "fallbackUsed": true,
+          "lexical": 0.644,
+          "grade": {
+            "score": 5,
+            "breakdown": {
+              "rootCause": 3,
+              "action": 2
+            },
+            "verdict": "partial",
+            "rationale": "Root cause different component in oil system; action partially relevant but not reference.",
+            "label": "B"
+          }
+        },
+        {
+          "key": "gpt-oss-20b",
+          "ok": true,
+          "text": "**Root cause:** The oil pump impeller is worn or partially blocked, so it can’t maintain pressure and forces oil into the scavenge line, raising its temperature.  \n**Action:** Remove the oil pump, inspect the impeller for wear, erosion, or foreign‑body blockage, and replace the pump if any damage or excessive wear is found. Re‑install with a new seal and verify pressure with a test rig before flight.",
+          "latencyMs": 810,
+          "inputTokens": 131,
+          "outputTokens": 164,
+          "reasoningTokens": 66,
+          "costUsd": 0.00005902499999999999,
+          "costSource": "list-price",
+          "servedModel": "openai/gpt-oss-20b",
+          "servedBy": "openai/gpt-oss-20b",
+          "fallbackUsed": false,
+          "lexical": 0.448,
+          "grade": {
+            "score": 10,
+            "breakdown": {
+              "rootCause": 6,
+              "action": 4
+            },
+            "verdict": "correct",
+            "rationale": "Root cause aligns with pump failure; action directly inspects/replaces pump as reference.",
+            "label": "C"
+          }
+        },
+        {
+          "key": "qwen-27b",
+          "ok": true,
+          "text": "The most likely root cause is internal engine wear, specifically excessive clearance in the main or rod bearings, or a failing oil pump. This condition reduces oil pressure and increases friction, leading to elevated scavenge temperatures. The intact filter delta-p indicator rules out external debris or filter clogging, pointing toward internal mechanical degradation.\n\nInspect the engine’s oil analysis report for elevated metal particulates (iron, copper, or aluminum) to confirm bearing or pump wear. If metals are present, perform a borescope inspection of the engine’s internal components. If wear is confirmed, the engine requires immediate shutdown and overhaul or replacement of the affected bearings or oil pump to prevent catastrophic failure. Do not return the aircraft to service until the source of the wear is identified and rectified.",
+          "latencyMs": 1371,
+          "inputTokens": 75,
+          "outputTokens": 156,
+          "reasoningTokens": 0,
+          "costUsd": null,
+          "costSource": "list-price",
+          "servedModel": "qwen/qwen3.8-27b",
+          "servedBy": "qwen/qwen3.8-27b",
+          "fallbackUsed": false,
+          "lexical": 0.438,
+          "grade": {
+            "score": 9,
+            "breakdown": {
+              "rootCause": 6,
+              "action": 3
+            },
+            "verdict": "correct",
+            "rationale": "Root cause matches bearings/pump; action reasonable but not exact reference inspection.",
+            "label": "A"
+          }
+        },
+        {
+          "key": "nemotron-120b",
+          "ok": false,
+          "error": "nvidia/nemotron-3-super-120b-a12b:free: Upstream error from Nvidia: Service temporarily overloaded → google/gemma-4-31b-it:free: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temp"
+        }
+      ],
+      "judgeCall": {
+        "latencyMs": 2907.386624999999,
+        "costUsd": 0.00068715,
+        "inputTokens": 957,
+        "outputTokens": 906,
+        "servedBy": "openai/gpt-oss-120b",
+        "fallbackUsed": false
+      }
+    }
+  ],
+  "finishedAt": "2026-09-28T06:56:07.757Z",
+  "durationMs": 50619,
+  "summary": [
+    {
+      "key": "gpt-oss-20b",
+      "label": "GPT-OSS 20B (via Groq)",
+      "vendor": "OpenAI (open-weight)",
+      "provider": "groq",
+      "model": "openai/gpt-oss-20b",
+      "answered": 3,
+      "graded": 3,
+      "errors": 0,
+      "accuracy": 100,
+      "accuracyCI": {
+        "lower": 100,
+        "upper": 100
+      },
+      "passRate": 100,
+      "lexical": 46.2,
+      "latencyMs": {
+        "mean": 870,
+        "p50": 899,
+        "p95": 901
+      },
+      "costUsd": {
+        "total": 0.000176,
+        "perAnswer": 0.000059,
+        "perCorrect": 0.000059,
+        "source": "list-price"
+      },
+      "outputTokens": 488,
+      "fallbacks": 0,
+      "fallbackModels": [],
+      "composite": 96.7,
+      "tier": "Production",
+      "rank": 1
+    },
+    {
+      "key": "nemotron-120b",
+      "label": "Nemotron 3 Super 120B (via OpenRouter, free)",
+      "vendor": "NVIDIA (open-weight)",
+      "provider": "openrouter",
+      "model": "nvidia/nemotron-3-super-120b-a12b:free",
+      "answered": 2,
+      "graded": 2,
+      "errors": 1,
+      "accuracy": 100,
+      "accuracyCI": {
+        "lower": 100,
+        "upper": 100
+      },
+      "passRate": 100,
+      "lexical": 34.1,
+      "latencyMs": {
+        "mean": 4775,
+        "p50": 4775,
+        "p95": 5126
+      },
+      "costUsd": {
+        "total": 0,
+        "perAnswer": 0,
+        "perCorrect": 0,
+        "source": "billed"
+      },
+      "outputTokens": 610,
+      "fallbacks": 0,
+      "fallbackModels": [],
+      "composite": 82.1,
+      "tier": "Analysis",
+      "rank": 2
+    },
+    {
+      "key": "qwen-27b",
+      "label": "Qwen3.8 27B (via Groq)",
+      "vendor": "Alibaba (open-weight)",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "answered": 3,
+      "graded": 3,
+      "errors": 0,
+      "accuracy": 63.3,
+      "accuracyCI": {
+        "lower": 0,
+        "upper": 100
+      },
+      "passRate": 66.7,
+      "lexical": 30.8,
+      "latencyMs": {
+        "mean": 1108,
+        "p50": 1304,
+        "p95": 1364
+      },
+      "costUsd": {
+        "total": null,
+        "perAnswer": null,
+        "perCorrect": 0,
+        "source": "list-price"
+      },
+      "outputTokens": 454,
+      "fallbacks": 0,
+      "fallbackModels": [],
+      "composite": 72.9,
+      "tier": "Research",
+      "rank": 3
+    },
+    {
+      "key": "gemini-flash",
+      "label": "Gemini 3.5 Flash",
+      "vendor": "Google",
+      "provider": "gemini",
+      "model": "gemini-3.5-flash",
+      "answered": 3,
+      "graded": 3,
+      "errors": 0,
+      "accuracy": 43.3,
+      "accuracyCI": {
+        "lower": 0,
+        "upper": 80
+      },
+      "passRate": 33.3,
+      "lexical": 43.4,
+      "latencyMs": {
+        "mean": 7163,
+        "p50": 2270,
+        "p95": 15995
+      },
+      "costUsd": {
+        "total": 0.011978,
+        "perAnswer": 0.003993,
+        "perCorrect": 0.011978,
+        "source": "list-price"
+      },
+      "outputTokens": 1531,
+      "fallbacks": 2,
+      "fallbackModels": [
+        "gemini-3.1-flash-lite"
+      ],
+      "composite": 37.7,
+      "tier": "Research",
+      "rank": 4
+    }
+  ],
+  "billedCostUsd": 0,
+  "freeTierNote": "All calls run on free tiers (Groq free plan, Gemini free tier, OpenRouter :free models). Cost columns show what the same calls would cost on paid tiers.",
+  "judgeModelsUsed": [
+    "openai/gpt-oss-120b"
+  ],
+  "judgeCostUsd": 0.002357
+}

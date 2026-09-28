@@ -3,6 +3,7 @@ const path = require("path");
 const fs = require("fs");
 // The routes are located at project-root `src/routes/...` (not under web/)
 const rankingRoutes = require("../src/routes/rankings");
+const liveRoutes = require("../src/routes/live");
 
 function loadEnvFile(envPath) {
   if (!fs.existsSync(envPath)) return;
@@ -31,6 +32,7 @@ const PORT = process.env.PORT || 5002;
 app.use(express.json());
 app.use("/static", express.static(path.join(__dirname, "static")));
 app.use(rankingRoutes);
+app.use(liveRoutes);
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "templates", "index.html"));

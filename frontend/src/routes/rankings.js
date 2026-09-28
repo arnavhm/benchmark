@@ -207,7 +207,7 @@ router.get("/api-status", async (req, res) => {
 
   if (keySet) {
     try {
-      const model = process.env.DATASET_ANALYZER_MODEL || "gemini-2.5-flash";
+      const model = process.env.DATASET_ANALYZER_MODEL || "gemini-3.8-flash";
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(process.env.GEMINI_API_KEY)}`;
       const probe = await fetch(url, {
         method: "POST",
@@ -228,7 +228,7 @@ router.get("/api-status", async (req, res) => {
     gemini_api_key_set: keySet,
     gemini_ready: geminiReady,
     llm_dataset_analyzer: geminiReady,
-    dataset_analyzer_model: process.env.DATASET_ANALYZER_MODEL || "gemini-2.5-flash"
+    dataset_analyzer_model: process.env.DATASET_ANALYZER_MODEL || "gemini-3.8-flash"
   });
 });
 

@@ -9,6 +9,7 @@
   <!-- Stylesheets -->
   <link rel="stylesheet" href="/static/style.css" />
   <link rel="stylesheet" href="/static/table-dark-mode.css" />
+  <link rel="stylesheet" href="/static/live.css" />
 
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
@@ -24,24 +25,135 @@
       </div>
       <h1 class="header__title">AI Model Benchmark Analyzer</h1>
       <p class="header__subtitle">
-        Compare top LLMs across standard benchmarks and evaluate with your own custom datasets
+        Benchmark real LLMs live on domain tasks — graded blind, timed and costed per call
       </p>
     </header>
 
     <!-- ═══ Tab Navigation ═══════════════════════════════════════════════════ -->
     <nav class="tab-nav" id="tab-nav" role="tablist">
-      <button class="tab-btn tab-btn--active" id="tab-dashboard" data-tab="dashboard" role="tab" aria-selected="true">
-        <span class="tab-btn__icon">📊</span> Standard Benchmarks
+      <button class="tab-btn tab-btn--active" id="tab-live" data-tab="live" role="tab" aria-selected="true">
+        <span class="tab-btn__icon">⚡</span> Live Benchmark
+      </button>
+      <button class="tab-btn" id="tab-dashboard" data-tab="dashboard" role="tab" aria-selected="false">
+        <span class="tab-btn__icon">📊</span> Reference Leaderboard
       </button>
       <button class="tab-btn" id="tab-custom" data-tab="custom" role="tab" aria-selected="false">
-        <span class="tab-btn__icon">🧪</span> Custom Benchmark Analysis
+        <span class="tab-btn__icon">🧪</span> Dataset Analyzer
       </button>
     </nav>
+
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         TAB 0: Live Benchmark — real API calls, blind LLM judge
+         ═════════════════════════════════════════════════════════════════════ -->
+    <div class="tab-panel tab-panel--active" id="panel-live" role="tabpanel">
+
+      <section class="section" id="live-controls-section">
+        <div class="section__header">
+          <div class="section__icon">⚡</div>
+          <div>
+            <div class="section__title">Live Benchmark</div>
+            <div class="section__description">Any Q&amp;A dataset, sent to real models right now. Every answer is graded by a blind LLM judge against the reference on explicit criteria; latency and cost are measured per call.</div>
+          </div>
+        </div>
+
+        <div class="live-card">
+          <div id="live-status" class="live-status"><span class="live-muted">Loading provider status…</span></div>
+
+          <div class="live-controls">
+            <label class="live-field">
+              <span>Dataset</span>
+              <select id="live-dataset"></select>
+            </label>
+            <label class="live-field">
+              <span>Questions</span>
+              <select id="live-limit">
+                <option value="0">All</option>
+                <option value="3">First 3</option>
+                <option value="5">First 5</option>
+                <option value="10">First 10</option>
+              </select>
+            </label>
+            <div class="live-actions">
+              <button class="run-btn" id="live-run-btn" disabled>▶ Run live benchmark</button>
+              <button class="upload-btn" id="live-check-btn" type="button">🔎 Check models</button>
+              <button class="upload-btn" id="live-replay-btn" type="button" disabled>⏪ Load last saved run</button>
+            </div>
+          </div>
+          <div id="live-criteria" class="live-muted"></div>
+          <details class="live-upload live-howto" id="live-howto">
+            <summary>📐 How scoring works (open methodology)</summary>
+            <ol class="live-howto__list">
+              <li><strong>Same question, every model, at once.</strong> Each question is sent to every model with the same instruction. Latency is measured wall-clock per API call; token counts come from each provider's own usage report.</li>
+              <li><strong>Blind judge.</strong> A separate judge model (not competing) sees the question, the reference answer and all answers labelled A, B, C, D in a shuffled order. It never sees model names.</li>
+              <li><strong>Explicit criteria.</strong> The judge scores each answer on the dataset's criteria (shown above, summing to 10) and writes a one-line rationale. The per-criterion scores are visible on every answer.</li>
+              <li><strong>Accuracy.</strong> Mean judge score × 10, with a 95% bootstrap confidence interval over questions. Pass rate = answers scoring ≥ 7/10.</li>
+              <li><strong>Composite.</strong> 0.625 × accuracy + 0.375 × speed (speed = 100 at 0 s, 0 at ≥ 10 s mean latency). Cost is shown but not scored, because every call here runs on a free tier.</li>
+              <li><strong>Tiers with a safety gate.</strong> Production &gt; 85 composite, Analysis &gt; 70 — but a model needs ≥ 85% accuracy for Production and ≥ 70% for Analysis. Models are ranked by accuracy first; a fast but wrong model can't win.</li>
+              <li><strong>Reliability.</strong> Rate limits are retried; overloaded models fall back to a named backup, and every backup answer is flagged. Every run is saved as JSON in <code>data/live_runs/</code> so results can be audited or replayed.</li>
+            </ol>
+            <div class="live-muted">Full details and source: <code>SCORING.md</code> in the repository · judge prompt in <code>frontend/src/live/judge.js</code> · criteria in <code>frontend/src/live/config.js</code>.</div>
+          </details>
+          <details class="live-upload">
+            <summary>➕ Benchmark on your own dataset</summary>
+            <form id="live-upload-form" class="live-upload__form">
+              <p class="live-muted">Any domain works. Upload a JSON array or CSV where each row has a <code>question</code> (or <code>prompt</code>/<code>input</code>) and a reference <code>answer</code> (or <code>expected_answer</code>/<code>ground_truth</code>). Optional: <code>id</code>, <code>difficulty</code>. Up to 100 rows.</p>
+              <div class="live-upload__row">
+                <input type="file" id="live-upload-file" accept=".json,.csv,application/json,text/csv" />
+                <input type="text" id="live-upload-name" placeholder="Dataset name (e.g. Indian tax law)" maxlength="60" />
+              </div>
+              <textarea id="live-upload-rubric" rows="2" maxlength="1500" placeholder="Optional grading guidance for the judge, e.g. 'Accept any answer citing the correct section of the Act; penalise outdated rates.'"></textarea>
+              <div><button class="upload-btn" type="submit">⬆️ Add dataset</button> <span id="live-upload-status"></span></div>
+            </form>
+          </details>
+          <div id="live-note" class="live-note"></div>
+          <div id="live-preflight" class="live-preflight" style="display:none"></div>
+          <div id="live-progress" class="live-progress" style="display:none">
+            <div class="live-progress__bar"><div class="live-progress__fill" id="live-progress-fill"></div></div>
+            <div class="live-progress__text" id="live-progress-text"></div>
+          </div>
+        </div>
+      </section>
+
+      <div id="live-results" style="display:none">
+        <div class="live-run-meta" id="live-run-meta"></div>
+
+        <section class="section">
+          <div class="section__header">
+            <div class="section__icon">🏁</div>
+            <div>
+              <div class="section__title">Results</div>
+              <div class="section__description">Judge accuracy, speed and cost measured in this run</div>
+            </div>
+          </div>
+          <div id="live-leaderboard"></div>
+          <div class="live-chart-card" id="live-chart-card" style="display:none">
+            <div class="live-chart-title">Accuracy vs latency <span class="live-muted">(bubble size = cost per answer)</span></div>
+            <div class="live-chart-wrap"><canvas id="live-chart"></canvas></div>
+          </div>
+          <div class="live-method" id="live-method"></div>
+        </section>
+
+        <section class="section">
+          <div class="section__header">
+            <div class="section__icon">💬</div>
+            <div>
+              <div class="section__title">Answers, side by side</div>
+              <div class="section__description">What each model actually said, and how the judge scored it (hover a score for the rationale)</div>
+            </div>
+          </div>
+          <div id="live-questions"></div>
+        </section>
+      </div>
+
+    </div><!-- /panel-live -->
 
     <!-- ═══════════════════════════════════════════════════════════════════════
          TAB 1: Standard Dashboard
          ═════════════════════════════════════════════════════════════════════ -->
-    <div class="tab-panel tab-panel--active" id="panel-dashboard" role="tabpanel">
+    <div class="tab-panel" id="panel-dashboard" role="tabpanel">
+
+      <div class="live-honesty">ℹ️ Reference scores are curated category scores stored in <code>data/models.json</code> (last updated April 2026), not results measured by this app. Use them to shortlist; use the <strong>Live Benchmark</strong> tab to measure.</div>
 
       <!-- Stats Bar -->
       <div class="stats-bar" id="stats-bar">
@@ -318,13 +430,15 @@
         </a>
       </div>
 
+      <div class="live-honesty">ℹ️ This tab <strong>estimates</strong> how models would do on a dataset from their reference scores — it does not call the models. For measured answers, latency and cost, use the <strong>Live Benchmark</strong> tab.</div>
+
       <!-- ── Controls ───────────────────────────────────────────────────────── -->
       <section class="section" id="custom-controls-section">
         <div class="section__header">
           <div class="section__icon">🧪</div>
           <div>
             <div class="section__title">Custom Benchmark Analysis</div>
-            <div class="section__description">Evaluate GPT-4, Claude, Gemini &amp; Llama on 60 curated questions</div>
+            <div class="section__description">Classify a dataset and estimate which model fits it best, from reference scores</div>
           </div>
         </div>
 
@@ -337,9 +451,7 @@
               <button class="mode-btn mode-btn--active" id="mode-simulated" data-mode="simulated">
                 🎭 Simulated
               </button>
-              <button class="mode-btn" id="mode-real" data-mode="real_api">
-                ⚡ Real API (Gemini)
-              </button>
+              <!-- Real-API mode removed: it never made model calls. Live calls happen in the Live Benchmark tab. -->
             </div>
           </div>
 
@@ -431,7 +543,7 @@
             <div class="section__icon">🎯</div>
             <div>
               <div class="section__title">Evaluation Metrics</div>
-              <div class="section__description">Per-question correctness, keyword F1, and statistical significance across 5 independent trials</div>
+              <div class="section__description">Estimated from reference scores (5 seeded simulation trials) — not measured model output</div>
             </div>
           </div>
           <div id="eval-metrics-container"></div>
@@ -557,13 +669,14 @@
 
     <!-- ═══ Footer ════════════════════════════════════════════════════════════ -->
     <footer class="footer">
-      <p>AI Model Benchmark Analyzer · Built with Flask, Chart.js &amp; Pandas · Custom Benchmarks powered by Gemini API</p>
+      <p>AI Model Benchmark Analyzer · Node.js · Express · Chart.js · Live models via Groq, OpenRouter &amp; Gemini APIs</p>
     </footer>
 
   </div><!-- /app-container -->
 
   <!-- Application Script -->
   <script src="/static/script.js"></script>
+  <script src="/static/live.js"></script>
 
 </body>
 </html>

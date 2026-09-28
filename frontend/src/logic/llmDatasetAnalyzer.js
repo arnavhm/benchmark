@@ -116,7 +116,7 @@ async function requestGeminiOpenAIAnalysis(url, prompt) {
       "Authorization": `Bearer ${getConfiguredGeminiKey()}`
     },
     body: JSON.stringify({
-      model: process.env.DATASET_ANALYZER_MODEL || "gemini-2.5-flash",
+      model: process.env.DATASET_ANALYZER_MODEL || "gemini-3.8-flash",
       messages: [
         {
           role: "system",
@@ -157,7 +157,7 @@ async function analyzeDatasetWithLLM(samples) {
   if (!geminiKey) return null;
 
   try {
-    const model = process.env.DATASET_ANALYZER_MODEL || "gemini-2.5-flash";
+    const model = process.env.DATASET_ANALYZER_MODEL || "gemini-3.8-flash";
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(geminiKey)}`;
     const openAiUrl = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
     const sampleSummary = buildGeminiSampleSummary(samples.slice(0, 4));

@@ -1,0 +1,134 @@
+{
+  "_note": "Models used by the Live Benchmark tab. Edit ids here; run 'Check models' in the dashboard to confirm each id exists for your keys. Prices are USD per 1M tokens (list prices, checked 2026-09-28). OpenRouter reports the billed cost per call itself, so its prices are only a fallback.",
+  "contestants": [
+    {
+      "key": "gemini-flash",
+      "label": "Gemini 3.1 Flash-Lite",
+      "vendor": "Google",
+      "provider": "gemini",
+      "model": "gemini-3.1-flash-lite",
+      "envModel": "LIVE_GEMINI_MODEL",
+      "pricing": {
+        "input": 0.25,
+        "output": 1.5,
+        "source": "ai.google.dev/gemini-api/docs/pricing (paid tier)"
+      },
+      "fallbacks": [
+        {
+          "provider": "gemini",
+          "model": "gemini-3.5-flash",
+          "pricing": {
+            "input": 1.5,
+            "output": 9.0
+          }
+        },
+        {
+          "provider": "gemini",
+          "model": "gemini-3.8-flash",
+          "pricing": {
+            "input": 0.75,
+            "output": 3.75
+          }
+        }
+      ]
+    },
+    {
+      "key": "gpt-oss-20b",
+      "label": "GPT-OSS 20B (via Groq)",
+      "vendor": "OpenAI (open-weight)",
+      "provider": "groq",
+      "model": "openai/gpt-oss-20b",
+      "envModel": "LIVE_GROQ_MODEL_1",
+      "extra": {
+        "reasoning_effort": "low"
+      },
+      "pricing": {
+        "input": 0.075,
+        "output": 0.3,
+        "source": "console.groq.com/docs/models (paid tier)"
+      }
+    },
+    {
+      "key": "qwen-27b",
+      "label": "Qwen3.8 27B (via Groq)",
+      "vendor": "Alibaba (open-weight)",
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "envModel": "LIVE_GROQ_MODEL_2",
+      "pricing": {
+        "input": null,
+        "output": null,
+        "source": "Groq price not published for this model; cost excluded from its composite"
+      }
+    },
+    {
+      "key": "nemotron-120b",
+      "label": "Nemotron 3 Super 120B (via OpenRouter, free)",
+      "vendor": "NVIDIA (open-weight)",
+      "provider": "openrouter",
+      "model": "nvidia/nemotron-3-super-120b-a12b:free",
+      "envModel": "LIVE_OPENROUTER_MODEL",
+      "pricing": {
+        "input": null,
+        "output": null,
+        "source": "OpenRouter :free model \u2014 billed cost read from each response ($0)"
+      },
+      "extra": {
+        "reasoning": {
+          "effort": "low"
+        }
+      },
+      "fallbacks": [
+        {
+          "provider": "openrouter",
+          "model": "google/gemma-4-31b-it:free"
+        }
+      ]
+    }
+  ],
+  "judge": {
+    "label": "GPT-OSS 120B (blind judge, via Groq)",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "pricing": {
+      "input": 0.15,
+      "output": 0.6
+    },
+    "extra": {
+      "reasoning_effort": "medium"
+    },
+    "envProvider": "LIVE_JUDGE_PROVIDER",
+    "envModel": "LIVE_JUDGE_MODEL",
+    "fallbacks": [
+      {
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "pricing": {
+          "input": 0.075,
+          "output": 0.3
+        }
+      },
+      {
+        "provider": "gemini",
+        "model": "gemini-3.5-flash",
+        "pricing": {
+          "input": 1.5,
+          "output": 9.0
+        }
+      }
+    ],
+    "_note": "Strongest free model with generous limits; it does not compete. It shares a family with the GPT-OSS 20B contestant - disclose this."
+  },
+  "settings": {
+    "maxAnswerWords": 120,
+    "passThreshold": 7,
+    "questionConcurrency": 2,
+    "requestTimeoutMs": 45000,
+    "costInComposite": false,
+    "freeTierNote": "All calls run on free tiers (Groq free plan, Gemini free tier, OpenRouter :free models). Cost columns show what the same calls would cost on paid tiers.",
+    "accuracyGate": {
+      "production": 85,
+      "analysis": 70
+    }
+  }
+}
