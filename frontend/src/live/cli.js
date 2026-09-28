@@ -8,15 +8,11 @@
 const fs = require("fs");
 const path = require("path");
 
-// Load the project .env the same way web/server.js does (never overrides real env vars).
-const envPath = path.join(__dirname, "..", "..", "..", ".env");
-if (fs.existsSync(envPath)) {
-  for (const line of fs.readFileSync(envPath, "utf8").split(/\r?\n/)) {
-    const t = line.trim();
-    if (!t || t.startsWith("#") || !t.includes("=")) continue;
-    const k = t.slice(0, t.indexOf("=")).trim();
-    if (process.env[k] === undefined) process.env[k] = t.slice(t.indexOf("=") + 1).trim();
-  }
+const { loadEnv, keyReport } = require("./env");
+const envFiles = loadEnv();
+if (process.argv.includes("--check")) {
+  console.log(envFiles.length ? `Loaded .env from: ${envFiles.join(", ")}` : "No .env file found - create one in the project root (copy .env.example).");
+  console.log(`API keys:\n${keyReport()}\n`);
 }
 
 const { loadConfig } = require("./config");

@@ -5,26 +5,8 @@ const fs = require("fs");
 const rankingRoutes = require("../src/routes/rankings");
 const liveRoutes = require("../src/routes/live");
 
-function loadEnvFile(envPath) {
-  if (!fs.existsSync(envPath)) return;
-
-  const contents = fs.readFileSync(envPath, "utf8");
-  contents.split(/\r?\n/).forEach((line) => {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith("#")) return;
-
-    const separatorIndex = trimmed.indexOf("=");
-    if (separatorIndex === -1) return;
-
-    const key = trimmed.slice(0, separatorIndex).trim();
-    const value = trimmed.slice(separatorIndex + 1).trim();
-    if (key && process.env[key] === undefined) {
-      process.env[key] = value;
-    }
-  });
-}
-
-loadEnvFile(path.join(__dirname, "..", "..", ".env"));
+const { loadEnv, keyReport } = require("../src/live/env");
+const envFiles = loadEnv();
 
 const app = express();
 const PORT = process.env.PORT || 5002;
@@ -49,6 +31,8 @@ app.use((error, req, res, next) => {
 if (require.main === module) {
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`AI Benchmark Analyzer running at http://127.0.0.1:${PORT}`);
+    console.log(envFiles.length ? `Loaded .env from: ${envFiles.join(", ")}` : "No .env file found - create one in the project root (copy .env.example).");
+    console.log(`API keys:\n${keyReport()}`);
   });
 }
 

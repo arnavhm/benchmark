@@ -10,7 +10,7 @@
  *   GROQ_API_KEY, OPENROUTER_API_KEY, GEMINI_API_KEY
  */
 
-const PLACEHOLDER = /^(your_|<|changeme|xxx|placeholder)/i;
+const PLACEHOLDER = /^(your_|<|changeme|xxx|placeholder|paste_)/i;
 
 const PROVIDERS = {
   groq: {
