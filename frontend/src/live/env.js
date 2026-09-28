@@ -46,7 +46,7 @@ function loadEnv() {
       for (const [k, v] of Object.entries(vars)) {
         if (!isReal(process.env[k]) && (isReal(v) || process.env[k] === undefined)) {
           process.env[k] = v;
-          if (isReal(v)) used = true;
+          if (isReal(v) && /_API_KEY$/.test(k)) used = true;
         }
       }
       if (used || name === ".env") loaded.push(file);
@@ -70,4 +70,41 @@ function keyReport() {
   return ["GROQ_API_KEY", "OPENROUTER_API_KEY", "GEMINI_API_KEY"].map((k) => `  ${k}: ${mask(process.env[k])}`).join("\n");
 }
 
-module.exports = { loadEnv, keyReport, parse, envLikeFiles };
+const KEY_NAMES = ["GROQ_API_KEY", "OPENROUTER_API_KEY", "GEMINI_API_KEY"];
+const ROOT_ENV = process.env.LIVE_ENV_FILE || path.join(__dirname, "..", "..", "..", ".env");
+
+/**
+ * Save keys to the project-root .env (creating it if needed), replacing any existing
+ * lines for those keys, and apply them to this process immediately.
+ */
+function saveKeys(updates) {
+  const clean = {};
+  for (const k of KEY_NAMES) {
+    let v = updates[k];
+    if (typeof v !== "string") continue;
+    v = v.trim().replace(/^["']|["']$/g, "");
+    if (!v) continue;
+    if (/[\s=]/.test(v)) throw new Error(`${k} looks malformed (contains spaces or '=').`);
+    clean[k] = v;
+  }
+  if (!Object.keys(clean).length) throw new Error("No keys provided.");
+  const existing = fs.existsSync(ROOT_ENV) ? fs.readFileSync(ROOT_ENV, "utf8").replace(/^\uFEFF/, "").split(/\r?\n/) : [];
+  const kept = existing.filter((line) => {
+    const key = line.replace(/^\s*export\s+/, "").split("=")[0].trim();
+    return !(key in clean);
+  });
+  while (kept.length && kept[kept.length - 1].trim() === "") kept.pop();
+  const lines = [...kept, ...Object.entries(clean).map(([k, v]) => `${k}=${v}`), ""];
+  fs.writeFileSync(ROOT_ENV, lines.join("\n"));
+  for (const [k, v] of Object.entries(clean)) process.env[k] = v;
+  return { file: ROOT_ENV, saved: Object.keys(clean) };
+}
+
+function keyStatus() {
+  return Object.fromEntries(KEY_NAMES.map((k) => {
+    const v = process.env[k];
+    return [k, isReal(v) ? { set: true, hint: `${v.trim().slice(0, 4)}…${v.trim().slice(-3)}` } : { set: false }];
+  }));
+}
+
+module.exports = { loadEnv, keyReport, parse, envLikeFiles, saveKeys, keyStatus, KEY_NAMES, ROOT_ENV };

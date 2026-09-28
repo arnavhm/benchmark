@@ -14,7 +14,10 @@ const { listModels, PROVIDERS } = require("../live/providers");
 const { getDatasets, getDataset, loadConfig, loadDataset, saveCustomDataset, providerStatus } = require("../live/config");
 const { runLiveBenchmark, listRuns, loadRun } = require("../live/runner");
 
+const { saveKeys, keyStatus, envLikeFiles, ROOT_ENV } = require("../live/env");
+
 const router = express.Router();
+const isLocal = (req) => ["127.0.0.1", "::1", "::ffff:127.0.0.1"].includes(req.socket.remoteAddress);
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 2 * 1024 * 1024 } });
 let activeRun = null;
 
@@ -102,6 +105,22 @@ router.post("/api/live/datasets", upload.single("file"), (req, res) => {
     const rubric = String(req.body?.rubric || "").slice(0, 1500);
     const saved = saveCustomDataset({ name, rubric, rows });
     res.json({ ok: true, ...saved, name });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// Key status (never returns the keys themselves).
+router.get("/api/live/keys", (req, res) => {
+  res.json({ keys: keyStatus(), envFile: ROOT_ENV, envFileExists: require("fs").existsSync(ROOT_ENV), envLikeFiles: envLikeFiles() });
+});
+
+// Paste keys in the dashboard: saved to <project>/.env and applied immediately. Only from this computer.
+router.post("/api/live/keys", (req, res) => {
+  if (!isLocal(req)) return res.status(403).json({ error: "Keys can only be set from the computer running the server (open http://127.0.0.1:5002)." });
+  try {
+    const result = saveKeys(req.body || {});
+    res.json({ ok: true, ...result, keys: keyStatus() });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

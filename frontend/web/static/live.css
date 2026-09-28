@@ -148,3 +148,12 @@
 
 .live-howto__list { margin: 10px 0 8px 18px; display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; }
 .live-howto__list strong { color: var(--text-primary); }
+
+.live-keys summary span.live-muted { margin-left: 8px; font-size: 0.8rem; }
+.live-keys__row { display: flex; align-items: center; gap: 12px; font-size: 0.85rem; color: var(--text-secondary); }
+.live-keys__row > span { width: 150px; flex-shrink: 0; }
+.live-keys__row small { color: var(--text-muted); }
+.live-keys__row input {
+  flex: 1; background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm); padding: 8px 10px; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+}

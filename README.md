@@ -16,12 +16,16 @@ Requirements: Node.js 18+.
 
 ```bash
 git clone https://github.com/arnavhm/benchmark.git
-cd benchmark
-cp .env.example .env        # then paste your keys into .env (never commit it)
-cd frontend && npm install
-npm run live:check          # every line should say OK
+cd benchmark/frontend
+npm install
 npm start                   # open http://127.0.0.1:5002
 ```
+Then add your API keys in **one** of these ways (all save to `benchmark/.env`, which git ignores):
+- **Easiest:** in the dashboard open **🔑 API keys**, paste the keys, click **Save keys** — works immediately, no restart.
+- Terminal: `npm run setup` and paste each key when asked.
+- Manually: copy `.env.example` to `.env` in the `benchmark` folder and fill in the keys.
+
+The terminal prints which keys were found when the server starts. If it says **port already in use**, an old copy of the server is still running — close that terminal, or run `PORT=5003 npm start`.
 
 Keys (all have free tiers):
 | Variable | Get one at |

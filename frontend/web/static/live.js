@@ -26,7 +26,41 @@
   }
 
   // ── Config / status ──────────────────────────────────────────────────────
+  async function loadKeys() {
+    try {
+      const k = await (await fetch("/api/live/keys")).json();
+      const entries = Object.entries(k.keys);
+      const setCount = entries.filter(([, v]) => v.set).length;
+      $("live-keys-file").textContent = k.envFile;
+      $("live-keys-summary").innerHTML = entries
+        .map(([name, v]) => `<span class="${v.set ? "" : "live-warn"}">${esc(name.replace("_API_KEY", ""))} ${v.set ? `✓ ${esc(v.hint)}` : "✗ missing"}</span>`)
+        .join(" · ");
+      if (setCount < entries.length && !state.keysOpened) { $("live-keys").open = true; state.keysOpened = true; }
+    } catch { /* older server */ }
+  }
+
+  async function saveKeys(e) {
+    e.preventDefault();
+    const form = $("live-keys-form");
+    const body = {};
+    for (const input of form.querySelectorAll("input")) if (input.value.trim()) body[input.name] = input.value.trim();
+    const status = $("live-keys-status");
+    if (!Object.keys(body).length) { status.innerHTML = '<span class="live-warn">Paste at least one key.</span>'; return; }
+    status.innerHTML = '<span class="live-muted">Saving…</span>';
+    try {
+      const res = await fetch("/api/live/keys", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || res.statusText);
+      form.reset();
+      status.innerHTML = `✅ Saved ${data.saved.length} key(s). Now click <strong>🔎 Check models</strong>.`;
+      await loadConfig();
+    } catch (err) {
+      status.innerHTML = `<span class="live-warn">❌ ${esc(err.message)}</span>`;
+    }
+  }
+
   async function loadConfig() {
+    loadKeys();
     const res = await fetch("/api/live/config");
     state.config = await res.json();
     renderStatus();
@@ -54,8 +88,9 @@
         ${judge.available ? "" : '<span class="live-warn">no key for judge provider</span>'}</div>`;
     const anyReady = contestants.some((c) => c.available) && judge.available;
     $("live-run-btn").disabled = !anyReady;
+    if (anyReady && /No API keys yet/.test($("live-note").textContent)) $("live-note").innerHTML = "";
     if (!anyReady) {
-      $("live-note").innerHTML = "Add <code>GROQ_API_KEY</code>, <code>OPENROUTER_API_KEY</code> and/or <code>GEMINI_API_KEY</code> to <code>.env</code> and restart the server to run live. You can still replay a saved run.";
+      $("live-note").innerHTML = "No API keys yet — paste them in <strong>🔑 API keys</strong> above (no restart needed). You can still replay a saved run.";
     }
   }
 
@@ -424,6 +459,7 @@
     $("live-replay-btn").addEventListener("click", replay);
     $("live-dataset").addEventListener("change", renderCriteriaHint);
     $("live-upload-form").addEventListener("submit", uploadDataset);
+    $("live-keys-form").addEventListener("submit", saveKeys);
     loadConfig().catch((e) => { $("live-note").innerHTML = `<span class="live-warn">Could not load live config: ${esc(e.message)}</span>`; });
   });
 })();

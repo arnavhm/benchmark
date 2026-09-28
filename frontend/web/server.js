@@ -29,10 +29,20 @@ app.use((error, req, res, next) => {
 });
 
 if (require.main === module) {
-  app.listen(PORT, "0.0.0.0", () => {
+  const server = app.listen(PORT, "0.0.0.0", () => {
     console.log(`AI Benchmark Analyzer running at http://127.0.0.1:${PORT}`);
     console.log(envFiles.length ? `Loaded keys from: ${envFiles.join(", ")}` : `No .env file with keys found. Env-like files in the project folder: ${envLikeFiles().join(", ") || "none"}. Create a file named exactly .env next to .env.example.`);
     console.log(`API keys:\n${keyReport()}`);
+    console.log("Tip: you can also paste keys in the dashboard (Live Benchmark → 🔑 API keys) or run: npm run setup");
+  });
+  server.on("error", (error) => {
+    if (error.code === "EADDRINUSE") {
+      console.error(`\n❌ Port ${PORT} is already in use — an OLD copy of the server is still running, and the browser is talking to it.`);
+      console.error("   Close the other terminal window running the server (or restart the computer), then run npm start again.");
+      console.error(`   Or start on another port:  PORT=5003 npm start   and open http://127.0.0.1:5003\n`);
+      process.exit(1);
+    }
+    throw error;
   });
 }
 

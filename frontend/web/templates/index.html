@@ -58,6 +58,16 @@
         </div>
 
         <div class="live-card">
+          <details class="live-upload live-keys" id="live-keys">
+            <summary>🔑 API keys <span id="live-keys-summary" class="live-muted"></span></summary>
+            <form id="live-keys-form" class="live-upload__form" autocomplete="off">
+              <p class="live-muted">Paste your keys here — they are saved to <code id="live-keys-file">.env</code> on this computer and used immediately (no restart). Leave a box empty to keep the current key. Keys are never shown again or sent anywhere except the provider.</p>
+              <label class="live-keys__row"><span>Groq <small>(gsk_…)</small></span><input type="password" name="GROQ_API_KEY" placeholder="GROQ_API_KEY" spellcheck="false" /></label>
+              <label class="live-keys__row"><span>OpenRouter <small>(sk-or-…)</small></span><input type="password" name="OPENROUTER_API_KEY" placeholder="OPENROUTER_API_KEY" spellcheck="false" /></label>
+              <label class="live-keys__row"><span>Gemini <small>(AIza…)</small></span><input type="password" name="GEMINI_API_KEY" placeholder="GEMINI_API_KEY" spellcheck="false" /></label>
+              <div><button class="upload-btn" type="submit">💾 Save keys</button> <span id="live-keys-status"></span></div>
+            </form>
+          </details>
           <div id="live-status" class="live-status"><span class="live-muted">Loading provider status…</span></div>
 
           <div class="live-controls">
